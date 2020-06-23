@@ -1,0 +1,15 @@
+// This file contains the implementaon of a 1-bit NOT gate
+
+/**
+ * Not gate:
+ * out = not in
+ */
+
+CHIP Not {
+    IN in;
+    OUT out;
+
+    PARTS:
+    // NOT a = a NAND s
+    Nand(a=in, b=in, out=out);
+}

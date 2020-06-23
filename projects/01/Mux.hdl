@@ -1,0 +1,23 @@
+// This file contains the implementation of a 1-bit multipexor
+
+/** 
+ * Multiplexor:
+ * out = a if sel == 0
+ *       b otherwise
+ */
+
+CHIP Mux {
+    IN a, b, sel;
+    OUT out;
+
+    PARTS:
+    // If sel is 0, gate1 is a
+    Not(in=sel, out=notsel);
+    And(a=notsel, b=a, out=gate1);
+    
+    // If sel is 1, gate2 is b
+    And(a=sel, b=b, out=gate2);
+    
+    // Combine gates
+    Or(a=gate1, b=gate2, out=out);
+}

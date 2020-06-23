@@ -1,0 +1,17 @@
+// This file contains the implementation of a 1-bit AND gate
+
+/**
+ * And gate: 
+ * out = 1 if (a == 1 and b == 1)
+ *       0 otherwise
+ */
+
+CHIP And {
+    IN a, b;
+    OUT out;
+
+    PARTS:
+    // a AND b = NOT (a NAND b)
+    Nand(a=a, b=b, out=nanded);
+    Not(in=nanded, out=out);
+}

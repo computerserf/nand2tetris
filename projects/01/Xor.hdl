@@ -1,0 +1,19 @@
+// This file contains the implemenation of a 1-bit XOR gate
+
+/**
+ * Exclusive-or gate:
+ * out = not (a == b)
+ */
+
+CHIP Xor {
+    IN a, b;
+    OUT out;
+
+    PARTS:
+    // a XOR b = (a AND NOT b) OR (NOT a AND b)
+    Not(in=a, out=nota);
+    Not(in=b, out=notb);
+    And(a=a, b=notb, out=gate1);
+    And(a=nota, b=b, out=gate2);
+    Or(a=gate1, b=gate2, out=out);
+}

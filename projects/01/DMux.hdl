@@ -1,0 +1,20 @@
+// This file contains the implementation of a 1-bit demultiplexer
+
+/**
+ * Demultiplexor:
+ * {a, b} = {in, 0} if sel == 0
+ *          {0, in} if sel == 1
+ */
+
+CHIP DMux {
+    IN in, sel;
+    OUT a, b;
+
+    PARTS:
+    // a = in AND NOT SEL
+    Not(in=sel, out=notsel);
+    And(a=in, b=notsel, out=a);
+    
+    // b = in AND sl
+    And(a=in, b=sel, out=b);
+}

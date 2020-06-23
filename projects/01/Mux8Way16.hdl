@@ -1,0 +1,26 @@
+// This file contains the implementaion of a 8-way 16-bit multiplexor
+
+/**
+ * 8-way 16-bit multiplexor:
+ * out = a if sel == 000
+ *       b if sel == 001
+ *       etc.
+ *       h if sel == 111
+ */
+
+CHIP Mux8Way16 {
+    IN a[16], b[16], c[16], d[16],
+       e[16], f[16], g[16], h[16],
+       sel[3];
+    OUT out[16];
+
+    PARTS:
+    // gate1 = a if sel[0..1] = 00, b if sel[0..1] = 01, c if sel[0..1] = 10, d if sel[0..1] = 11
+    Mux4Way16(a=a, b=b, c=c, d=d, sel=sel[0..1], out=gate1);
+    
+    // gate2  = e if sel[0..1] = 00, f if sel[0..1] = 01, g if sel[0..1] = 10, h if sel[0..1] = 11
+    Mux4Way16(a=e, b=f, c=g, d=h, sel=sel[0..1], out=gate2);
+    
+    // out = gate1 if sel[1] = 0, gate2 if sel[1] = 1
+    Mux16(a=gate1, b=gate2, sel=sel[2], out=out);
+}
