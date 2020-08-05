@@ -1,3 +1,5 @@
+// This file contains the implementation of a cicuit to increment 16-bit numbers (without detecting overflows)
+
 // This file is part of www.nand2tetris.org
 // and the book "The Elements of Computing Systems"
 // by Nisan and Schocken, MIT Press.
@@ -13,5 +15,5 @@ CHIP Inc16 {
     OUT out[16];
 
     PARTS:
-   // Put you code here:
+    Add16(a=in, b[0]=true, b[1..15]=false, out=out);
 }
