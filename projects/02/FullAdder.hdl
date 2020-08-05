@@ -1,3 +1,5 @@
+// This file contains the implementation of a 1-bit full adder
+
 // This file is part of www.nand2tetris.org
 // and the book "The Elements of Computing Systems"
 // by Nisan and Schocken, MIT Press.
@@ -13,5 +15,12 @@ CHIP FullAdder {
         carry;   // Left bit of a + b + c
 
     PARTS:
-    // Put you code here:
+    // sum1 = sum(HalfAdder(a, b)); carry1 = carry(HalfAdder(a, b))
+    HalfAdder(a=a, b=b, sum=sum1, carry=carry1);
+    
+    // sum = sum(HalfAdder(sum1, c)); carry2 = carry(HalfAdder(sum1, c))
+    HalfAdder(a=sum1, b=c, sum=sum, carry=carry2);
+    
+    // carry = carry1 OR carry2
+    Or(a=carry1, b=carry2, out=carry);
 }
