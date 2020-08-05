@@ -1,3 +1,5 @@
+// This file contains an implementation of a 1-bit half adder
+
 // This file is part of www.nand2tetris.org
 // and the book "The Elements of Computing Systems"
 // by Nisan and Schocken, MIT Press.
@@ -13,5 +15,9 @@ CHIP HalfAdder {
         carry;  // Left bit of a + b
 
     PARTS:
-    // Put you code here:
+    // sum = a XOR B
+    Xor(a=a, b=b, out=sum);
+    
+    // carry = a AND B
+    And(a=a, b=b, out=carry);
 }
