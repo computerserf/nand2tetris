@@ -1,3 +1,5 @@
+// This file contains an implementation of a 16-bit ALU (does not detect overflow)
+
 // This file is part of www.nand2tetris.org
 // and the book "The Elements of Computing Systems"
 // by Nisan and Schocken, MIT Press.
@@ -42,5 +44,29 @@ CHIP ALU {
         ng; // 1 if (out < 0),  0 otherwise
 
     PARTS:
-   // Put you code here:
+    // Calculate zeros and negatives
+    
+    And16(a=x, b[0..15]=false, out=xzero);
+    Mux16(a=x, b=xzero, out=zeroedx, sel=zx);
+    Not16(in=zeroedx, out=xneg);
+    Mux16(a=zeroedx, b=xneg, out=finalx, sel=nx);
+    
+    And16(a=y, b[0..15]=false, out=yzero);
+    Mux16(a=y, b=yzero, out=zeroedy, sel=zy);
+    Not16(in=zeroedy, out=yneg);
+    Mux16(a=zeroedy, b=yneg, out=finaly, sel=ny);
+    
+    // Calculate functions and negatives; set zero and negative flags
+    
+    Add16(a=finalx, b=finaly, out=outadd);
+    And16(a=finalx, b=finaly, out=outand);
+    Mux16(a=outand, b=outadd, out=function, sel=f);
+    
+    Not16(in=function, out=functionneg);
+    Mux16(a=function, b=functionneg, out=out, out[0..7]=outlow, out[8..15]=outhigh, out[15]=ng, sel=no);
+
+    Or8Way(in=outlow, out=firstzero);
+    Or8Way(in=outhigh, out=secondzero);
+    Or(a=firstzero, b=secondzero, out=noutzero);
+    Not(in=noutzero, out=zr);
 }
