@@ -1,3 +1,5 @@
+// This file contains the implementation of a 16-bit counter
+
 // This file is part of www.nand2tetris.org
 // and the book "The Elements of Computing Systems"
 // by Nisan and Schocken, MIT Press.
@@ -16,5 +18,12 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    
+    Inc16(in=fout, out=plus1);
+    
+    Mux16(a=fout, b=plus1, out=out1, sel=inc);
+    Mux16(a=out1, b=in, out=out2, sel=load);
+    Mux16(a=out2, b=false, out=fin, sel=reset);
+    
+    Register(in=fin, load=true, out=out, out=fout);
 }
