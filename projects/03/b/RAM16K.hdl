@@ -1,3 +1,5 @@
+// This file contains an implementation of RAM16K
+
 // This file is part of www.nand2tetris.org
 // and the book "The Elements of Computing Systems"
 // by Nisan and Schocken, MIT Press.
@@ -15,5 +17,14 @@ CHIP RAM16K {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    // Demultiplex load signal
+    DMux4Way(in=load, a=load1, b=load2, c=load3, d=load4, sel=address[12..13]);
+    
+    // Multiplex output signal
+    RAM4K(in=in, load=load1, out=out1, address=address[0..11]);
+    RAM4K(in=in, load=load2, out=out2, address=address[0..11]);
+    RAM4K(in=in, load=load3, out=out3, address=address[0..11]);
+    RAM4K(in=in, load=load4, out=out4, address=address[0..11]);
+    
+    Mux4Way16(a=out1, b=out2, c=out3, d=out4, out=out, sel=address[12..13]);
 }
