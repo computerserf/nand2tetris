@@ -1,3 +1,5 @@
+// This file contains an implementation of a 1-it register
+
 // This file is part of www.nand2tetris.org
 // and the book "The Elements of Computing Systems"
 // by Nisan and Schocken, MIT Press.
@@ -14,5 +16,6 @@ CHIP Bit {
     OUT out;
 
     PARTS:
-    // Put your code here:
+    Mux(a=feedback, b=in, out=feedin, sel=load);
+    DFF(in=feedin, out=out, out=feedback);
 }
