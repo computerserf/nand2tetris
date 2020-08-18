@@ -1,6 +1,6 @@
 # nand2tetris
 
-This repository contains source code implentations for, and files needed to compile and run, projects from the first edition of [*The Elements of Computing Systems*](https://www.nand2tetris.org/). For those unfamiliar, it is a sequence of projects starting from the lowly the NAND gate, proceeding up the computing stack till operating systems, where the reader implements a computer and it's various software systems.
+This repository contains source code implentations for, and files needed to compile and run, projects from the first edition of [*The Elements of Computing Systems*](https://www.nand2tetris.org/). For those unfamiliar, it is a sequence of projects starting from the lowly the NAND gate, proceeding up the computing stack till operating systems, where the reader implements a computer and its various software systems.
 
 ## Contents ##
 
