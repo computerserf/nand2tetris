@@ -1,6 +1,6 @@
 # nand2tetris
 
-This repository containst source code implentations for, and files needed to compile and run, projects from the first edition of [*The Elements of Computing Systems*](https://www.nand2tetris.org/). For those unfamiliar, it is a sequence of projects starting from the lowly the NAND gate, proceeding up the computing stack till operating systems, where the reader implements a computer and it's various software systems.
+This repository contains source code implentations for, and files needed to compile and run, projects from the first edition of [*The Elements of Computing Systems*](https://www.nand2tetris.org/). For those unfamiliar, it is a sequence of projects starting from the lowly the NAND gate, proceeding up the computing stack till operating systems, where the reader implements a computer and it's various software systems.
 
 ## Contents ##
 
@@ -18,7 +18,7 @@ Using data flip-flops as a primitive, this project require building sequential c
 
 ### Project 4: Machine Language ###
 
-Hitherto, every project entailed digital design. This project is a preview of writing assembly language programs to motivate the architecture of the computer. Introduced here are the Hack assembler and the CPU simulator.
+Hitherto, every project was digital design. This project is a preview of writing assembly language programs to motivate the architecture of the computer. Introduced here are the Hack assembler and the CPU simulator.
 
 ### Other projects ###
 
