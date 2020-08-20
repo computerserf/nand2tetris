@@ -1,3 +1,5 @@
+// This file contains an implementation of the memory chhip.
+
 // This file is part of www.nand2tetris.org
 // and the book "The Elements of Computing Systems"
 // by Nisan and Schocken, MIT Press.
@@ -27,5 +29,22 @@ CHIP Memory {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    // Check whether upper 4 bits is 4, 5, 6 or invalid
+	DMux8Way(in=true, sel=address[12..14], a=ram0, b=ram1, c=ram2, d=ram3, e=screen0, f=screen1, g=keyboard, h=ignore);
+	
+	Or8Way(in[0]=ram0, in[1]=ram1, in[2]=ram2, in[3]=ram3, in[4..7]=false, out=ram);
+	Or8Way(in[0]=screen0, in[1]=screen1, in[2..7]=false, out=screen);
+	
+	// Compute outputs
+	And(a=ram, b=load, out=loadram);
+	RAM16K(in=in, load=loadram, address=address[0..13], out=ramout);
+	
+	And(a=screen, b=load, out=loadscreen);
+	Screen(in=in, load=loadscreen, address=address[0..12], out=screenout);
+	
+	Keyboard(out=keyboardout);
+	
+	// Select the correct output
+	Mux8Way16(sel[0]=ram, sel[1]=screen, sel[2]=keyboard, a=false, b=ramout, c=screenout, d=false, e=keyboardout, f=false, g=false, h=false, out=out);
+
 }
