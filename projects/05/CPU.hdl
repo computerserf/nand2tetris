@@ -1,3 +1,5 @@
+// This file contains an implementation of the CPU
+
 // This file is part of www.nand2tetris.org
 // and the book "The Elements of Computing Systems"
 // by Nisan and Schocken, MIT Press.
@@ -39,5 +41,55 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-    // Put your code here:
-}
+	
+	Not(in=instruction[15], out=IsAInstruction);
+	
+	// Select input to A depending on instruction type
+    Mux16(a[0..14]=instruction[0..14], a[15]=false, b=ALUout,  sel=instruction[15], out=Ain);
+	
+	// Overwrite A?
+	And(a=instruction[15], b=instruction[5], out=destA);
+	Or(a=destA, b=IsAInstruction, out=loadA);
+	ARegister(in=Ain, out=Aout, out=PCin, out=address, load=loadA);
+	
+	// Choose between A or M in computation
+	Mux16(a=Aout, b=inM, sel=instruction[12], out=AorM);
+	
+	// Overwrite D?
+	And(a=instruction[4], b=instruction[15], out=loadD);
+	DRegister(in=Din, out=Dout, load=loadD);
+	
+	// Do the computation using ALU
+	ALU(x=Dout, y=AorM, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], zr=IsZero0, zr=IsZero1, zr=IsEQ, ng=IsNeg, ng=IsLT, out=outM, out=Din,  out=ALUout);
+	
+	// Compute jump signals
+	Not(in=IsNeg, out=IsGE, out=IsNotNeg);
+	Not(in=IsZero0, out=IsNE, out=IsNotZero);
+	Or(a=IsZero1, b=IsNeg, out=IsLE);
+	And(a=IsNotZero, b=IsNotNeg, out=IsGT);
+	
+	DMux8Way(in=instruction[15], a=nullJump, b=GTJump, c=EQJump, d=GEJump, e=LTJump, f=NEJump, g=LEJump, h=rawJump, sel=instruction[0..2]);
+	
+	And(a=GTJump, b=IsGT, out=JGT);
+	And(a=EQJump, b=IsEQ, out=JEQ);
+	And(a=GEJump, b=IsGE, out=JGE);
+	And(a=LTJump, b=IsLT, out=JLT);
+	And(a=NEJump, b=IsNE, out=JNE);
+	And(a=LEJump, b=IsLE, out=JLE);
+	
+	Or8Way(in[0]=JGT, in[1]=JEQ, in[2]=JGE, in[3]=JLT, in[4]=JNE, in[5]=JLE, in[6]=rawJump, in[7]=false, out=subJump);
+	
+	// Jump only for C-instructions
+	And(a=subJump, b=instruction[15], out=Jump);
+	
+	// Overwrite M?
+	And(a=instruction[3], b=instruction[15], out=writeM);
+	
+	// Write new M address
+	And16(a=address, b[0..14]=true, b[15]=false, out[0..14]=addressM, out[15]=ignore);
+	
+	// Handle program counter
+	Not(in=Jump, out=notJump);
+	PC(in=PCin, load=Jump, inc=notJump, reset=reset, out[0..14]=pc, out[15]=null);
+	
+}	
