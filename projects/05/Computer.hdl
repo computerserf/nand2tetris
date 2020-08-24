@@ -1,3 +1,5 @@
+// This file contains sn implementstion of the Hack computef
+
 // This file is part of www.nand2tetris.org
 // and the book "The Elements of Computing Systems"
 // by Nisan and Schocken, MIT Press.
@@ -19,5 +21,7 @@ CHIP Computer {
     IN reset;
 
     PARTS:
-    // Put your code here:
+    ROM32K(address=pc, out=instruction);
+	CPU(inM=data, instruction=instruction, reset=reset, outM=newdata, writeM=loaddata, addressM=dataaddress, pc=pc);
+	Memory(in=newdata, load=loaddata, address=dataaddress, out=data);
 }
