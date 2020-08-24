@@ -10,15 +10,19 @@ This project contains combinational circuits needed to build the computer system
 
 ### Project 2: Boolean Arithmetic ###
 
-Proceeding forward, this project enails building circuits capable of doing basic 2's complement arithmetic, such as an adder.
+Proceeding forward, this project enails building circuits capable of doing basic 2's complement arithmetic, such as an adder or ALU.
 
 ### Project 3: Sequential Logic ###
 
-Using data flip-flops as a primitive, this project require building sequential circuits such as registers and memory. The simulator simulates a clock.
+Using data flip-flops as a primitive, this project requires building sequential circuits such as, registers and memory. The simulator simulates a clock.
 
 ### Project 4: Machine Language ###
 
 Hitherto, every project was digital design. This project is a preview of writing assembly language programs to motivate the architecture of the computer. Introduced here are the Hack assembler and the CPU simulator.
+
+### Project 5: Computer Architecture ###
+
+This capstone hardeware project consisted of putting together all the circuits to build the Hack computer, consisting of RAM, ROM and CPU. I/O is memory mapped.
 
 ### Other projects ###
 
