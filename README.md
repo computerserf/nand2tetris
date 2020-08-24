@@ -22,7 +22,7 @@ Hitherto, every project was digital design. This project is a preview of writing
 
 ### Project 5: Computer Architecture ###
 
-This capstone hardeware project consisted of putting together all the circuits to build the Hack computer, consisting of RAM, ROM and CPU. I/O is memory mapped.
+This capstone hardware project consisted of putting together all the circuits to build the Hack computer, consisting of RAM, ROM and CPU. I/O is memory mapped.
 
 ### Other projects ###
 
