@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (c) 2020 Haresh Bhachandani
  * 
  * Permission is hereby granted, free of charge, to any person
@@ -23,48 +23,21 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/* Entry point and facade controller of the assembler
+/* Interface of the Code module
 */
-#include "Assembler.h"
 
-#include <iostream>
-#include <vector>
+#ifndef CODE_H
+#define CODE_H
+
 #include <string>
-#include <cassert>
 
-using namespace std;
-
-Assembler::Assembler(vector<string> arguments)
+// Refer to the API documentation in chapter 6
+class Code
 {
-//    assert(arguments.size() > 1);
-//    inputPath = arguments[1];
-}
+public:
+    static std::string dest(std::string mnemonic);
+    static std::string comp(std::string mnemonic);
+    static std::string jump(std::string mnemonic);
+};
 
-void Assembler::run()
-{
-//    parseFilname(inputPath);
-}
-
-void Assembler::parseFilname(string filename)
-{
-//    outputPath = "";
-}
-
-
-
-int main(int argc, char *argv[])
-{
-    // collect arguments passed to the program
-    vector<string> arguments;
-    
-	for(int i = 0; i < argc; i++)
-    {
-        arguments.push_back(argv[i]);
-    }
-    
-    // pass them to the assembler
-    Assembler program(arguments);
-    program.run();
-    
-    return 0;
-}
+#endif // CODE_H
