@@ -1,8 +1,30 @@
-﻿// Assembler.h : Include file for standard system include files,
-// or project specific include files.
+﻿/* Interface of the facade controller of the assembler
+*/
 
-#pragma once
+#ifndef _ASSEMBLER_H_
+#define _ASSEMBLER_H_
 
-#include <iostream>
+#include <vector>
+#include <string>
 
-// TODO: Reference additional headers your program requires here.
+class Assembler
+{
+public:
+    
+    // constructs the assembler by passing in command line arguments as configuration
+    Assembler(std::vector<std::string> arguments);
+    
+    // runs the assember
+    void run();
+
+private:
+    
+    void parseFilname(std::string);
+    void doFirstPass();
+    void doSecondPass();
+    
+    std::string inputPath;
+    std::string outputPath;
+};
+
+#endif
