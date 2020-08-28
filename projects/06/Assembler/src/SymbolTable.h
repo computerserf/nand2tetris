@@ -24,7 +24,7 @@
  */
 
 /* Interface of the SymbolTable module
-*/
+ */
 
 #ifndef SYMBOLTABLE_H
 #define SYMBOLTABLE_H

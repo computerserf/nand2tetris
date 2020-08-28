@@ -24,7 +24,7 @@
  */
 
 /* Interface of the facade controller of the assembler
-*/
+ */
 
 #ifndef ASSEMBLER_H
 #define ASSEMBLER_H

@@ -23,7 +23,31 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/* Implementation of the Code module
+/* Interface of Utility module
  */
 
-#include "Code.h"
+#ifndef UTILITY_H
+#define UTILITY_H
+
+#include <algorithm>
+#include <cctype>
+#include <string>
+#include <regex>
+
+// Trims whitespace from the beginning and end of a string
+
+/* taken from David G's answer: https://stackoverflow.com/questions/216823/whats-the-best-way-to-trim-stdstring
+ */
+inline std::string trim(const std::string &s)
+{
+   auto wsfront = find_if_not(s.begin(),s.end(), [](int c){return std::isspace(c);});
+   auto wsback = find_if_not(s.rbegin(),s.rend(), [](int c){return std::isspace(c);}).base();
+   return (wsback<=wsfront ? std::string() : std::string(wsfront,wsback));
+}
+
+inline std::string removeWhitespace(const std::string &str)
+{
+    return std::regex_replace(str, std::regex{"\\s+"}, "");
+}
+
+#endif // UTILITY_H

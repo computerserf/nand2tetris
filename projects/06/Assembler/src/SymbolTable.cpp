@@ -23,6 +23,6 @@
  */
 
 /* Implementation of the SymbolTable module
-*/
+ */
 
 #include "SymbolTable.h"

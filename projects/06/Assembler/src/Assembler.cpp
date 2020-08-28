@@ -24,7 +24,7 @@
  */
 
 /* Entry point and facade controller of the assembler
-*/
+ */
 #include "Assembler.h"
 
 #include <iostream>

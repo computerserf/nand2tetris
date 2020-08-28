@@ -24,33 +24,49 @@
  */
 
 /* Interface of the Parser module.
-*/
+ */
 
 #ifndef PARSER_H
 #define PARSER_H
 
 #include <string>
-#include <fstream>
+#include <istream>
 
 enum class CommandType
 {
     A,
     C,
-    L
+    L,
+    Unknown
 };
 
 // Refer to the API documentation in chapter 6
 class Parser
 {
 public:
-    Parser(std::ifstream &fileStream);
+    Parser(std::istream &inputStream);
     bool hasMoreCommands();
     void advance();
-    CommandType commandType(); 
-    std::string symbol();
-    std::string dest();
-    std::string comp();
-    std::string jump();
+    CommandType getCommandType(); 
+    std::string getSymbol();
+    std::string getDest();
+    std::string getComp();
+    std::string getJump();
+    
+private:
+    std::istream &input;
+    CommandType type;
+    int line_no;
+    std::string symbol;
+    std::string dest;
+    std::string comp;
+    std::string jump;
+    
+    void skipComments();
+    void parseLabel(const std::string &s);
+    void parseAddress(const std::string &s);
+    void parseComputation(const std::string &s);
+    std::string stripLine(const std::string &line);
 };
 
 #endif // PARSER_H

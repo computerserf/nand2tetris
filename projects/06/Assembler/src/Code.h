@@ -24,7 +24,7 @@
  */
 
 /* Interface of the Code module
-*/
+ */
 
 #ifndef CODE_H
 #define CODE_H
@@ -35,6 +35,7 @@
 class Code
 {
 public:
+    static void init();
     static std::string dest(std::string mnemonic);
     static std::string comp(std::string mnemonic);
     static std::string jump(std::string mnemonic);
