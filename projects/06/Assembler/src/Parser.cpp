@@ -59,7 +59,7 @@ void Parser::advance()
     string command = stripLine(line);
     
     if(command.size() == 0)
-        throw runtime_error("Line " + to_string(line_no) + ": Could not parse line. Check syntax.");
+        throw runtime_error("Could not parse line. Check syntax.");
     
     // Get the command type
     if(command[0] == '(')
@@ -106,6 +106,12 @@ std::string Parser::getJump()
     return jump;
 }
 
+int Parser::getLineNumber()
+{
+    return line_no;
+}
+
+
 void Parser::skipComments()
 {
     // Keep getting the next character, skipping whitespace
@@ -149,8 +155,7 @@ string Parser::stripLine(const string &line)
             break;
         }
     
-    // Trim away whitespace
-    return trim(str);
+    return removeWhitespace(str);
 }
 
 const string label_expression = R"(/^\((\d+|[a-zA-z_\.\$:][a-zA-z_\.\$:0-9]*)\)$/)";
@@ -167,7 +172,7 @@ void Parser::parseLabel(const string &s)
     else
     {
         type = CommandType::Unknown;
-        throw runtime_error("Line " + to_string(line_no) + ": Could not parse L-command. Check syntax.");
+        throw runtime_error("Could not parse L-command. Check syntax.");
     }
 }
 
@@ -185,11 +190,11 @@ void Parser::parseAddress(const string &s)
     else
     {
         type = CommandType::Unknown;
-        throw runtime_error("Line " + to_string(line_no) + ": Could not parse A-command. Check syntax.");
+        throw runtime_error("Could not parse A-command. Check syntax.");
     }
 }
 
-const string computation_expession = R"(?/^(?\s*([AMD]{1,3})\s*=\s*)?(0|-?1|[\-!]?[ADM]|[ADM]\s*[\+\_&|]\s*(?1|[ADM]))(?\s*;\s*([A-Z]){3}\s*)?$/)";
+const string computation_expession = R"(?/^(?([AMD]{1,3})=)?(0|-?1|[\-!]?[ADM]|[ADM][\+\_&|](?1|[ADM]))(?;([A-Z]){3})?$/)";
 
 void Parser::parseComputation(const string &s)
 {
@@ -201,13 +206,13 @@ void Parser::parseComputation(const string &s)
     if(matches.size() > 2)
     {
         dest = matches[1];
-        comp = removeWhitespace(matches[2]);
+        comp = matches[2];
         jump = matches[3];
     }
     
     else
     {
         type = CommandType::Unknown;
-        throw runtime_error("Line " + to_string(line_no) + ": Could not parse C-command. Check syntax.");
+        throw runtime_error("Could not parse C-command. Check syntax.");
     }
 }

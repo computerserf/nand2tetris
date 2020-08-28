@@ -52,6 +52,7 @@ public:
     std::string getDest();
     std::string getComp();
     std::string getJump();
+    int getLineNumber();
     
 private:
     std::istream &input;

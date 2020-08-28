@@ -32,13 +32,12 @@
 #include <string>
 
 // Refer to the API documentation in chapter 6
-class Code
+namespace Code
 {
-public:
-    static void init();
-    static std::string dest(std::string mnemonic);
-    static std::string comp(std::string mnemonic);
-    static std::string jump(std::string mnemonic);
+    void init();
+    std::string dest(std::string mnemonic);
+    std::string comp(std::string mnemonic);
+    std::string jump(std::string mnemonic);
 };
 
 #endif // CODE_H
