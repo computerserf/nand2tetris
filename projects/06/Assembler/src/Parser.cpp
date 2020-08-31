@@ -34,6 +34,7 @@
 #include <cctype>
 #include <stdexcept>
 #include <regex>
+#include <iostream>
 
 using namespace std;
 
@@ -65,12 +66,12 @@ void Parser::advance()
     if(command[0] == '(')
     {
         type = CommandType::L;
-        parseComputation(command);
+        parseLabel(command);
     }
     else if(command[0] == '@')
     {
         type = CommandType::A;
-        parseComputation(command);
+        parseAddress(command);
     }
     else
     {
@@ -121,6 +122,9 @@ void Parser::skipComments()
         
         input.get(ch);
         
+        if(input.eof())
+            break;
+        
         // Keep track of newlines
         if(ch == '\n')
             line_no++;
@@ -132,7 +136,10 @@ void Parser::skipComments()
         
         // If the next character is a comment, skip the line
         if(ch == '/' && input.peek() == '/') 
+        {
             getline(input, ignore);
+            line_no++;
+        }
         
        // Otherwise place it back in the stream and exit
         else
@@ -158,7 +165,7 @@ string Parser::stripLine(const string &line)
     return removeWhitespace(str);
 }
 
-const string label_expression = R"(/^\((\d+|[a-zA-z_\.\$:][a-zA-z_\.\$:0-9]*)\)$/)";
+const string label_expression = R"(^\((\d+|[a-zA-z_\.\$:][a-zA-z_\.\$:0-9]*)\)$)";
 
 void Parser::parseLabel(const string &s)
 {
@@ -167,7 +174,7 @@ void Parser::parseLabel(const string &s)
     
     regex_match(s, matches, e);
     
-    if(matches.size() > 0)
+    if(matches.size() > 1)
         symbol = matches[1];
     else
     {
@@ -176,16 +183,17 @@ void Parser::parseLabel(const string &s)
     }
 }
 
-const string address_expression = R"(/^@(\d+|[a-zA-z_\.\$:][a-zA-z_\.\$:0-9]*)$/)";
+ const string address_expression = R"(^@(\d+|[a-zA-z_\.\$:][a-zA-z_\.\$:0-9]*)$)";
+
 
 void Parser::parseAddress(const string &s)
 {
-    regex e{label_expression};
+    regex e{address_expression};
     smatch matches;
     
     regex_match(s, matches, e);
     
-    if(matches.size() > 0)
+    if(matches.size() > 1)
         symbol = matches[1];
     else
     {
@@ -194,16 +202,16 @@ void Parser::parseAddress(const string &s)
     }
 }
 
-const string computation_expession = R"(?/^(?([AMD]{1,3})=)?(0|-?1|[\-!]?[ADM]|[ADM][\+\_&|](?1|[ADM]))(?;([A-Z]){3})?$/)";
+const string computation_expession = R"(^(?:([AMD]{1,3})=)?(0|-?1|[\-!]?[ADM]|[ADM][\+\-&|](?:1|[ADM]))(?:;([A-Z]{3}))?$)";
 
 void Parser::parseComputation(const string &s)
 {
-    regex e{label_expression};
+    regex e{computation_expession};
     smatch matches;
     
     regex_match(s, matches, e);
     
-    if(matches.size() > 2)
+    if(matches.size() > 3)
     {
         dest = matches[1];
         comp = matches[2];

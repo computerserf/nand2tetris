@@ -33,8 +33,7 @@
 #include <cctype>
 #include <string>
 #include <regex>
-
-// Trims whitespace from the beginning and end of a string
+#include <bitset>
 
 /* taken from David G's answer: https://stackoverflow.com/questions/216823/whats-the-best-way-to-trim-stdstring
  */
@@ -48,6 +47,12 @@ inline std::string trim(const std::string &s)
 inline std::string removeWhitespace(const std::string &str)
 {
     return std::regex_replace(str, std::regex{"\\s+"}, "");
+}
+
+// Converts a number string to a bitstring of length 15
+inline std::string ntobs(std::string n)
+{
+    return std::bitset<15>(stoi(n)).to_string();
 }
 
 #endif // UTILITY_H

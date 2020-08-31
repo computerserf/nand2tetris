@@ -95,22 +95,22 @@ string translate(const string &s, unordered_map<string, string> &map)
     auto in = map.find(s);
     
     if(in == map.end())
-        throw new runtime_error("Could not translate '" + s + "'. Invalid option.");
+        throw runtime_error("Could not translate '" + s + "'. Invalid option.");
     else
         return map[s];
 }
 
-string dest(const string &s)
+string Code::dest(const string &s)
 {
     return translate(s, destMap);
 }
 
-string comp(const string &s)
+string Code::comp(const string &s)
 {
     return translate(s, compMap);
 }
 
-string jump(const string &s)
+string Code::jump(const string &s)
 {
     return translate(s, jumpMap);
 }

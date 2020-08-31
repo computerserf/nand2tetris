@@ -37,19 +37,19 @@ class Assembler
 public:
     
     // constructs the assembler by passing in command line arguments as configuration
-    Assembler(std::vector<std::string> arguments);
+    Assembler(const std::vector<std::string> &arguments);
     
     // runs the assember
     void run();
 
 private:
     
-    void parseFilname(std::string);
+    std::string parseFilename(std::string);
     void doFirstPass();
     void doSecondPass();
     
-    std::string inputPath;
-    std::string outputPath;
+    std::string inputFile;
+    std::string outputFile;
 };
 
 #endif // ASSEMBLER_H

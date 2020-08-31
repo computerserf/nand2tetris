@@ -26,28 +26,109 @@
 /* Entry point and facade controller of the assembler
  */
 #include "Assembler.h"
+#include "Code.h"
+#include "Parser.h"
+#include "Utility.h"
 
 #include <iostream>
 #include <vector>
 #include <string>
 #include <cassert>
+#include <regex>
+#include <stdexcept>
+#include <fstream>
 
 using namespace std;
 
-Assembler::Assembler(vector<string> arguments)
+Assembler::Assembler(const vector<string> &arguments)
 {
-//    assert(arguments.size() > 1);
-//    inputPath = arguments[1];
+    if(arguments.size() == 2)
+        inputFile = arguments[1];
+    else
+        throw runtime_error("1 argument is required.");
 }
 
 void Assembler::run()
 {
-//    parseFilname(inputPath);
+    outputFile = parseFilename(inputFile) + ".hack";
+    
+    doFirstPass();
+    doSecondPass();
 }
 
-void Assembler::parseFilname(string filename)
+string Assembler::parseFilename(string filename)
 {
-//    outputPath = "";
+    static const string file_expression = R"((?:.*/)*(.*)\.asm$)";
+    regex e(file_expression);
+    smatch matches;
+    
+    regex_match(filename, matches, e);
+    
+    if(matches.size() > 1)
+        return matches[1];
+    else
+        throw runtime_error("Could not parse filename. Must end in .asm");
+}
+
+void Assembler::doFirstPass()
+{
+}
+
+void Assembler::doSecondPass()
+{
+    // open file for reading
+    ifstream ifs(inputFile);
+    Parser parse(ifs);
+    
+    // open file for writing
+    ofstream ofs(outputFile);
+    
+    try
+    {
+        // while there are more commands
+        while(parse.hasMoreCommands())
+        {
+            // read the commands
+            parse.advance();
+            
+            CommandType type = parse.getCommandType();
+            
+            switch(type)
+            {
+                // skip the command if it's the L-type
+                case CommandType::L:
+                    break;
+                    
+                // if it's of the A-type, write the output
+                case CommandType::A:
+                {
+                    ofs << '0' << ntobs(parse.getSymbol()) << endl;
+                    break;
+                }
+                    
+                // if it's of the C-type, write the output
+                case CommandType::C:
+                {
+                    auto comp = Code::comp(parse.getComp());
+                    auto dest = Code::dest(parse.getDest());
+                    auto jump = Code::jump(parse.getJump());
+                    ofs << '1' << "11" << comp << dest  << jump << endl;
+                    break;
+                }
+                
+                default:
+                {
+                    throw runtime_error("Code converion error. Unknown why.");
+                    break;
+                }
+            }
+        }
+        
+    }
+    catch(runtime_error &e)
+    {
+        throw runtime_error("Line " + to_string(parse.getLineNumber()) + ": " + e.what());
+    }
 }
 
 
@@ -62,9 +143,25 @@ int main(int argc, char *argv[])
         arguments.push_back(argv[i]);
     }
     
-    // pass them to the assembler
-    Assembler program(arguments);
-    program.run();
+    try
+    {
+        // initialize code module
+        Code::init();
+    
+        // pass them to the assembler
+        Assembler program(arguments);
+        program.run();
+    }
+    catch(exception &e)
+    {
+        cerr << e.what() << endl;
+        return 1;
+    }
+    catch(...)
+    {
+        cerr << "Unknown error!" << endl;
+        return 2;
+    }
     
     return 0;
 }
