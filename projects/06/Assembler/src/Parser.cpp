@@ -116,7 +116,7 @@ int Parser::getLineNumber()
 void Parser::skipComments()
 {
     // Keep getting the next character, skipping whitespace
-    while(input)
+    while(input && !input.eof())
     {
         char ch;
         
