@@ -24,6 +24,10 @@ Hitherto, every project was digital design. This project is a preview of writing
 
 This capstone hardware project consisted of putting together all the circuits to build the Hack computer, consisting of RAM, ROM and CPU. I/O is memory mapped.
 
+### Project 6: Assembler ###
+
+This first software project consisted of writing an assembler for the Hack computer. This implementation was done in C++,  using the CMake build system. All code was written from scratch.
+
 ### Other projects ###
 
 **To be continued**
