@@ -61,6 +61,8 @@ void Parser::advance()
     
     if(command.size() == 0)
         throw runtime_error("Could not parse line. Check syntax.");
+
+    //cout << line << command << endl;
     
     // Get the command type
     if(command[0] == '(')
@@ -155,17 +157,17 @@ string Parser::stripLine(const string &line)
     string str{line};
     
     // Strip comment to end
-    for(int i = 0; i < line.size() - 1; i++)
+    for(int  i = 0; i < line.size() - 1; i++)
         if(line[i] == '/' && line[i+1] == '/')
         {
-            str = line.substr(0, i+1);
+            str = line.substr(0, i);
             break;
         }
     
     return removeWhitespace(str);
 }
 
-const string label_expression = R"(^\((\d+|[a-zA-z_\.\$:][a-zA-z_\.\$:0-9]*)\)$)";
+const string label_expression = R"(^\(([a-zA-z_\.\$:][a-zA-z_\.\$:0-9]*)\)$)";
 
 void Parser::parseLabel(const string &s)
 {
@@ -183,8 +185,7 @@ void Parser::parseLabel(const string &s)
     }
 }
 
- const string address_expression = R"(^@(\d+|[a-zA-z_\.\$:][a-zA-z_\.\$:0-9]*)$)";
-
+const string address_expression = R"(^@(\d+|[a-zA-z_\.\$:][a-zA-z_\.\$:0-9]*)$)";
 
 void Parser::parseAddress(const string &s)
 {

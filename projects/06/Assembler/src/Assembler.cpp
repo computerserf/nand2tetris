@@ -33,6 +33,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cctype>
 #include <cassert>
 #include <regex>
 #include <stdexcept>
@@ -46,6 +47,8 @@ Assembler::Assembler(const vector<string> &arguments)
         inputFile = arguments[1];
     else
         throw runtime_error("1 argument is required.");
+
+    initializeSymbolTable();
 }
 
 void Assembler::run()
@@ -56,9 +59,24 @@ void Assembler::run()
     doSecondPass();
 }
 
+void Assembler::initializeSymbolTable()
+{
+    st.addEntry("SP", 0);
+    st.addEntry("LCL", 1);
+    st.addEntry("ARG", 2);
+    st.addEntry("THIS", 3);
+    st.addEntry("THAT", 4);
+
+    for (int i = 0; i < 16; i++)
+        st.addEntry("R" + to_string(i), i);
+
+    st.addEntry("SCREEN", 16384);
+    st.addEntry("KBD", 24576);
+}
+
 string Assembler::parseFilename(string filename)
 {
-    static const string file_expression = R"((?:.*/)*(.*)\.asm$)";
+    static const string file_expression = R"((?:.*(?:/|\\))*(.*)\.asm$)";
     regex e(file_expression);
     smatch matches;
     
@@ -72,6 +90,56 @@ string Assembler::parseFilename(string filename)
 
 void Assembler::doFirstPass()
 {
+    // open file for reading
+    ifstream ifs(inputFile);
+    Parser parse(ifs);
+
+    int outputLineCounter = 0;
+
+    try
+    {
+        // while there are more commands
+        while (parse.hasMoreCommands())
+        {
+            // read the commands
+            parse.advance();
+
+            CommandType type = parse.getCommandType();
+
+            switch (type)
+            {
+            // if it's an L-command, add symbol to table
+            case CommandType::L:
+            {
+                string symbol = parse.getSymbol();
+                if (st.contains(symbol))
+                    throw runtime_error("Symbol '" + symbol + "is already defined.");
+                else
+                    st.addEntry(symbol, outputLineCounter);
+                continue;
+            }
+
+            // do nothing
+            case CommandType::A:
+            case CommandType::C:
+            {
+                outputLineCounter++;
+                break;
+            }
+
+            default:
+            {
+                throw runtime_error("Code converion error. Unknown why.");
+                break;
+            }
+            }
+        }
+
+    }
+    catch (runtime_error& e)
+    {
+        throw runtime_error("Line " + to_string(parse.getLineNumber()) + ": " + e.what());
+    }
 }
 
 void Assembler::doSecondPass()
@@ -82,6 +150,8 @@ void Assembler::doSecondPass()
     
     // open file for writing
     ofstream ofs(outputFile);
+
+    int storeRamAddress = 16;
     
     try
     {
@@ -90,7 +160,10 @@ void Assembler::doSecondPass()
         {
             // read the commands
             parse.advance();
-            
+            if (true)
+            {
+
+            }
             CommandType type = parse.getCommandType();
             
             switch(type)
@@ -102,7 +175,19 @@ void Assembler::doSecondPass()
                 // if it's of the A-type, write the output
                 case CommandType::A:
                 {
-                    ofs << '0' << ntobs(parse.getSymbol()) << endl;
+                    string symbol = parse.getSymbol();
+                    string address;
+
+                    if (isdigit(symbol[0]))
+                        address = symbol;
+                    else
+                    {
+                        if (!st.contains(symbol))
+                            st.addEntry(symbol, storeRamAddress++);
+                        address = to_string(st.GetAddress(symbol));
+                    }
+
+                    ofs << '0' << ntobs(address) << endl;
                     break;
                 }
                     

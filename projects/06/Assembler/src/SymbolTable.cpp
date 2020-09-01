@@ -26,3 +26,20 @@
  */
 
 #include "SymbolTable.h"
+
+using namespace std;
+
+void SymbolTable::addEntry(string symbol, int address)
+{
+	map[symbol] = address;
+}
+
+bool SymbolTable::contains(string symbol)
+{
+	return map.count(symbol) > 0;
+}
+
+int SymbolTable::GetAddress(string symbol)
+{
+	return map[symbol];
+}

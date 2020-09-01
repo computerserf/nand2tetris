@@ -30,6 +30,7 @@
 #define SYMBOLTABLE_H
 
 #include <string>
+#include <unordered_map>
 
 // Refer to the API documentation in chapter 6
 class SymbolTable
@@ -37,7 +38,10 @@ class SymbolTable
 public:
     void addEntry(std::string symbol, int address);
     bool contains(std::string address);
-    int GetAddress(std::string);
+    int GetAddress(std::string symbol);
+
+private:
+    std::unordered_map<std::string, int> map;
 };
 
 #endif // SYMBOLTABLE_H

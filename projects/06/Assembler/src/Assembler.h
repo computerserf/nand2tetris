@@ -32,6 +32,8 @@
 #include <vector>
 #include <string>
 
+#include "SymbolTable.h"
+
 class Assembler
 {
 public:
@@ -45,11 +47,13 @@ public:
 private:
     
     std::string parseFilename(std::string);
+    void initializeSymbolTable();
     void doFirstPass();
     void doSecondPass();
     
     std::string inputFile;
     std::string outputFile;
+    SymbolTable st;
 };
 
 #endif // ASSEMBLER_H
