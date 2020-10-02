@@ -124,6 +124,75 @@ void Parser::skipComments()
     }
 }
 
+bool isArithmetic(const string &s)
+{
+    return false;
+}
+
+bool isMemoryAccess(const string &s)
+{
+    return false;
+}
+
+void Parser::parseCommmand(const string &command)
+{
+    static const std::string command_expresssion = R"(^(\w+)(\s*\w+){0,2}$)";
+    static const regex e{command_expresssion};
+    
+    smatch matches;
+    regex_match(command, matches, e);
+    
+    if(matches.size() > 1)
+    {
+        // match found; parse command
+        
+        if(isArithmetic(matches[1]))
+        {
+            if(matches.size() > 2)
+            {
+                type = CommandType::Unknown;
+                throw runtime_error("Could not arithmetic command. Check syntax.");;
+            }            
+            else
+            {
+                type = CommandType::Arithmetic;
+                arg1 = matches[1];
+                arg2 = "";
+            }
+        }
+        else if(isMemoryAccess(matches[1]))
+        {
+            if(matches.size() != 4)
+            {
+                type = CommandType::Unknown;
+                throw runtime_error("Could not memory access command. Check syntax.");
+            }
+            else
+            {
+                if(matches[1] == "push")
+                    type = CommandType::Push;
+                else
+                    type = CommandType::Pop;
+                
+                arg1 = trim(matches[2]);
+                arg2 = trim(matches[3]);
+            }
+            
+        }
+        else
+        {
+            type = CommandType::Unknown;
+            throw runtime_error("Could not parse command. Check syntax.");
+        }
+    }
+    else
+    {
+        type = CommandType::Unknown;
+        throw runtime_error("Could not parse command. Check syntax.");
+    }
+}
+
+
 string Parser::stripLine(const string &line)
 {
     string str{line};

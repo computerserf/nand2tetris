@@ -54,7 +54,7 @@ private:
     std::string arg2;
     
     void skipComments();
-    void parseCommmand(std::string command);
+    void parseCommmand(const std::string &command);
     std::string stripLine(const std::string &line);
 };
 
