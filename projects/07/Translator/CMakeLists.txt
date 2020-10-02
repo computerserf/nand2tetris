@@ -3,7 +3,7 @@
 project ("Translator")
 
 # Add source to this project's executable.
-add_executable (Translator "src/Translator.cpp")
+add_executable (Translator "src/Translator.cpp" "src/Parser.cpp")
 
 # Enable C++11
 target_compile_features(Translator PUBLIC cxx_std_11)
