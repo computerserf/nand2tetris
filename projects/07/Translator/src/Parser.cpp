@@ -37,8 +37,8 @@
 
 using namespace std;
 
-Parser::Parser(istream& inputStream) : input{inputStream}, type{CommandType::Unknown}, line_no{1}
-{    
+Parser::Parser(istream& inputStream) : input{inputStream}, type{CommandType::Unknown}, line_no{1}, arg1{""}, arg2{""}
+{
 }
 
 bool Parser::hasMoreCommands()
@@ -126,12 +126,13 @@ void Parser::skipComments()
 
 bool isArithmetic(const string &s)
 {
-    return false;
+	return (s == "add" || s == "sub" || s == "neg" || s == "eq" ||
+		s == "gt" || s == "lt" || s == "and" || s == "or" || s == "not");
 }
 
 bool isMemoryAccess(const string &s)
 {
-    return false;
+	return (s == "push" || s == "pop");
 }
 
 void Parser::parseCommmand(const string &command)
@@ -151,7 +152,7 @@ void Parser::parseCommmand(const string &command)
             if(matches.size() > 2)
             {
                 type = CommandType::Unknown;
-                throw runtime_error("Could not arithmetic command. Check syntax.");;
+                throw runtime_error("Could not parse arithmetic command. Check syntax.");;
             }            
             else
             {
