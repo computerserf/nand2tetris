@@ -56,8 +56,7 @@ void CodeWriter::writeArithmetic(string command)
 			"\tA=A-1\n"
 			"\tM=M+D\n"
 			"\t@SP\n"
-			"\tM=M-1\n"
-			<< endl;
+			"\tM=M-1\n";
 	}
 	else if(command == "sub")
 	{
@@ -69,16 +68,14 @@ void CodeWriter::writeArithmetic(string command)
 			"\tA=A-1\n"
 			"\tM=M-D\n"
 			"\t@SP\n"
-			"\tM=M-1\n"
-			<< endl;
+			"\tM=M-1\n";
 	}
 	else if(command == "neg")
 	{
 		out <<
 			"\t@SP\n"
 			"\tA=M\n"
-			"\tM=-M\n"
-			<< endl;
+			"\tM=-M\n";
 	}
 	else if (command == "eq")
 	{
@@ -98,8 +95,7 @@ void CodeWriter::writeArithmetic(string command)
 			"\tM=0\n"
 			"(" + branchLabel() + "E)\n"
 			"\t@SP\n"
-			"\tM=M-1\n"
-			<< endl;
+			"\tM=M-1\n";
 
 		branchCount++;
 	}
@@ -121,8 +117,9 @@ void CodeWriter::writeArithmetic(string command)
 			"\tM=0\n"
 			"(" + branchLabel() + "E)\n"
 			"\t@SP\n"
-			"\tM=M-1\n"
-			<< endl;
+			"\tM=M-1\n";
+
+		branchCount++;
 	}
 	else if (command == "lt")
 	{
@@ -142,8 +139,40 @@ void CodeWriter::writeArithmetic(string command)
 			"\tM=0\n"
 			"(" + branchLabel() + "E)\n"
 			"\t@SP\n"
-			"\tM=M-1\n"
-			<< endl;
+			"\tM=M-1\n";
+
+		branchCount++;
+	}
+	else if (command == "and")
+	{
+		out <<
+			"\t@SP\n"
+			"\tA=M\n"
+			"\tA=A-1\n"
+			"\tD=M\n"
+			"\tA=A-1\n"
+			"\tM=M&D\n"
+			"\t@SP\n"
+			"\tM=M-1\n";
+	}
+	else if (command == "or")
+	{
+	out <<
+		"\t@SP\n"
+		"\tA=M\n"
+		"\tA=A-1\n"
+		"\tD=M\n"
+		"\tA=A-1\n"
+		"\tM=M|D\n"
+		"\t@SP\n"
+		"\tM=M-1\n";
+	}
+	else if (command == "not")
+	{
+	out <<
+		"\t@SP\n"
+		"\tA=M\n"
+		"\tM=!M\n";
 	}
 	else
 		throw runtime_error("Arithmetic command '" + command + "' not valid command");

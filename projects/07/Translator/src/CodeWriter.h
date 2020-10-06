@@ -32,7 +32,7 @@
 #include "Common.h"
 
 #include <string>
-#include <ostresm>
+#include <ostream>
 
 // Refer to the API documentation in chapter 7
 class CodeWriter
@@ -44,7 +44,14 @@ public:
 	void writePushPop(CommandType type, std::string segment, int index);
 
 private:
-	std::ostream &outut;
+	std::ostream &out;
+	std::string filename;
+	unsigned int branchCount;
+
+	inline std::string branchLabel()
+	{
+		return filename + "$" + std::to_string(branchCount);
+	}
 };
 
 #endif // CODE_WRITER_H
