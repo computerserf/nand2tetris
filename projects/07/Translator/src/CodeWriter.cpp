@@ -177,3 +177,73 @@ void CodeWriter::writeArithmetic(string command)
 	else
 		throw runtime_error("Arithmetic command '" + command + "' not valid command");
 }
+
+void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
+{
+    if(index < 0 || index > 32767)
+        throw runtime_error("Push/pop command: " + to_string(index) + " not a valid indes");
+    
+    if(type == CommandType::Push)
+    {
+        if(segment == "constant")
+        {
+            out <<
+                "\t@" + to_string(index) + "\n"
+                "\tD=A\n"
+                "\t@SP\n"
+                "\tA=M\n"
+                "\tM=D\n"
+                "\t@SP\n"
+                "\tM=M+1\n";
+        }
+        else if(segment == "local")
+        {
+            out <<
+                "\t@" + to_string(index) + "\n"
+                "\tD=A\n"
+                "\t@LCL\n"
+                "\tA=M\n"
+                "\tA=A+D\n"
+                "\tD=M\n"
+                "\t@SP\n"
+                "\tA=M\n"
+                "\tM=D\n"
+                "\t@SP\n"
+                "\tM=M+1\n"
+        }
+    }
+    else if(type == CommandType::Pop)
+    {
+        if(segment == "constant")
+        {
+            out <<
+                "\t@SP\n"
+                "\tM=M-1\n";
+        }
+        else if(segment == "local")
+        {
+            out <<
+                "\t@SP\n"
+                "\tA=M\n"
+                "\tD=M\n"
+                "\t@SP\n"
+                "\tM=M-1\n"
+                "\t@R13\n"
+                "\tM=D\n"
+                "\t@" + to_string(index) + "\n";
+                "\tD=M\n"
+                "\t@LCL\n"
+                "\tA=M\n"
+                "\tD=A=D\n"
+                "\t@R14\n"
+                "\tM=D\n"
+                "\t@R13\n"
+                "\tD=M\n"
+                "\t@R14\n"
+                "\tA=M\n"
+                "\tM=D\n";
+        }
+    }
+    else
+        throw runtime_error("Push/pop command: invalid command type");
+}
