@@ -230,7 +230,7 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\tM=M-1\n"
                 "\t@R13\n"
                 "\tM=D\n"
-                "\t@" + to_string(index) + "\n";
+                "\t@" + to_string(index) + "\n"
                 "\tD=M\n"
                 "\t@LCL\n"
                 "\tA=M\n"
