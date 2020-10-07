@@ -209,7 +209,7 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\tA=M\n"
                 "\tM=D\n"
                 "\t@SP\n"
-                "\tM=M+1\n"
+                "\tM=M+1\n";
         }
     }
     else if(type == CommandType::Pop)
