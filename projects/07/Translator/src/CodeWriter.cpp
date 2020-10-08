@@ -251,6 +251,34 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\t@SP\n"
                 "\tM=M+1\n";
         }
+        else if(segment == "pointer")
+        {
+            if(index > 1)
+                throw runtime_error("Push command: 'pointer' segment index must be betweeen 0 and 1");
+            
+            if(index == 0)
+            {
+                out <<
+                    "\t@THIS\n"
+                    "\tD=M\n"
+                    "\t@SP\n"
+                    "\tA=M\n"
+                    "\tM=D\n"
+                    "\t@SP\n"
+                    "\tM=M+1\n";
+            }
+            else if(index == 0)
+            {
+                out <<
+                    "\t@THAT\n"
+                    "\tD=M\n"
+                    "\t@SP\n"
+                    "\tA=M\n"
+                    "\tM=D\n"
+                    "\t@SP\n"
+                    "\tM=M+1\n";
+            }
+        }
         else if(segment == "temp")
         {
             if(index > 7)
@@ -371,6 +399,34 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\t@R14\n"
                 "\tA=M\n"
                 "\tM=D\n";
+        }
+        else if(segment == "pointer")
+        {
+            if(index > 1)
+                throw runtime_error("Pop command: 'pointer' segment index must be betweeen 0 and 1");
+            
+            if(index == 0)
+            {
+                out <<
+                    "\t@SP\n"
+                    "\tA=M-1\n"
+                    "\tD=M\t"
+                    "\t@THIS\n"
+                    "\tM=D\n"
+                    "\t@SP\n"
+                    "\tM=M-1\n";
+            }
+            else if(index == 0)
+            {
+                out <<
+                    "\t@SP\n"
+                    "\tA=M-1\n"
+                    "\tD=M\t"
+                    "\t@THAT\n"
+                    "\tM=D\n"
+                    "\t@SP\n"
+                    "\tM=M-1\n";
+            }
         }
         else if(segment == "temp")
         {
