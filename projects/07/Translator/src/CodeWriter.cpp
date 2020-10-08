@@ -173,7 +173,7 @@ void CodeWriter::writeArithmetic(string command)
 
 void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
 {
-    if(index < 0 || index > 32767)
+    if(index < 0)
         throw runtime_error("Push/pop command: " + to_string(index) + " not a valid indes");
     
     if(type == CommandType::Push)
@@ -219,6 +219,38 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\t@SP\n"
                 "\tM=M+1\n";
         }
+        else if(segment == "this")
+        {
+            out <<
+                "\t@" + to_string(index) + "\n"
+                "\tD=A\n"
+                "\t@THIS\n"
+                "\tA=M\n"
+                "\tA=A+D\n"
+                "\tD=M\n"
+                "\t@SP\n"
+                "\tA=M\n"
+                "\tM=D\n"
+                "\t@SP\n"
+                "\tM=M+1\n";
+        }
+        else if(segment == "that")
+        {
+            out <<
+                "\t@" + to_string(index) + "\n"
+                "\tD=A\n"
+                "\t@THAT\n"
+                "\tA=M\n"
+                "\tA=A+D\n"
+                "\tD=M\n"
+                "\t@SP\n"
+                "\tA=M\n"
+                "\tM=D\n"
+                "\t@SP\n"
+                "\tM=M+1\n";
+        }
+        else
+            throw runtime_error("Push command: '" + segment + "' not a valid segment");
     }
     else if(type == CommandType::Pop)
     {
@@ -274,6 +306,54 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\tA=M\n"
                 "\tM=D\n";
         }
+        else if(segment == "this")
+        {
+            out <<
+                "\t@SP\n"
+                "\tA=M-1\n"
+                "\tD=M\n"
+                "\t@SP\n"
+                "\tM=M-1\n"
+                "\t@R13\n"
+                "\tM=D\n"
+                "\t@" + to_string(index) + "\n"
+                "\tD=M\n"
+                "\t@THIS\n"
+                "\tA=M\n"
+                "\tD=A+D\n"
+                "\t@R14\n"
+                "\tM=D\n"
+                "\t@R13\n"
+                "\tD=M\n"
+                "\t@R14\n"
+                "\tA=M\n"
+                "\tM=D\n";
+        }
+        else if(segment == "that")
+        {
+            out <<
+                "\t@SP\n"
+                "\tA=M-1\n"
+                "\tD=M\n"
+                "\t@SP\n"
+                "\tM=M-1\n"
+                "\t@R13\n"
+                "\tM=D\n"
+                "\t@" + to_string(index) + "\n"
+                "\tD=M\n"
+                "\t@THAT\n"
+                "\tA=M\n"
+                "\tD=A+D\n"
+                "\t@R14\n"
+                "\tM=D\n"
+                "\t@R13\n"
+                "\tD=M\n"
+                "\t@R14\n"
+                "\tA=M\n"
+                "\tM=D\n";
+        }
+        else
+            throw runtime_error("Pop command: '" + segment + "' not a valid segment");
     }
     else
         throw runtime_error("Push/pop command: invalid command type");
