@@ -50,8 +50,7 @@ void CodeWriter::writeArithmetic(string command)
 	{
 		out <<
 			"\t@SP\n"
-			"\tA=M\n"
-			"\tA=A-1\n"
+			"\tA=M-1\n"
 			"\tD=M\n"
 			"\tA=A-1\n"
 			"\tM=M+D\n"
@@ -62,8 +61,7 @@ void CodeWriter::writeArithmetic(string command)
 	{
 		out <<
 			"\t@SP\n"
-			"\tA=M\n"
-			"\tA=A-1\n"
+			"\tA=M-1\n"
 			"\tD=M\n"
 			"\tA=A-1\n"
 			"\tM=M-D\n"
@@ -81,8 +79,7 @@ void CodeWriter::writeArithmetic(string command)
 	{
 		out <<
 			"\t@SP\n"
-			"\tA=M\n"
-			"\tA=A-1\n"
+			"\tA=M-1\n"
 			"\tD=M\n"
 			"\tA=A-1\n"
 			"\tD=M-D\n"
@@ -103,8 +100,7 @@ void CodeWriter::writeArithmetic(string command)
 	{
 		out <<
 			"\t@SP\n"
-			"\tA=M\n"
-			"\tA=A-1\n"
+			"\tA=M-1\n"
 			"\tD=M\n"
 			"\tA=A-1\n"
 			"\tD=M-D\n"
@@ -125,8 +121,7 @@ void CodeWriter::writeArithmetic(string command)
 	{
 		out <<
 			"\t@SP\n"
-			"\tA=M\n"
-			"\tA=A-1\n"
+			"\tA=M-1\n"
 			"\tD=M\n"
 			"\tA=A-1\n"
 			"\tD=M-D\n"
@@ -147,8 +142,7 @@ void CodeWriter::writeArithmetic(string command)
 	{
 		out <<
 			"\t@SP\n"
-			"\tA=M\n"
-			"\tA=A-1\n"
+			"\tA=M-1\n"
 			"\tD=M\n"
 			"\tA=A-1\n"
 			"\tM=M&D\n"
@@ -159,8 +153,7 @@ void CodeWriter::writeArithmetic(string command)
 	{
 	out <<
 		"\t@SP\n"
-		"\tA=M\n"
-		"\tA=A-1\n"
+		"\tA=M-1\n"
 		"\tD=M\n"
 		"\tA=A-1\n"
 		"\tM=M|D\n"
@@ -211,6 +204,21 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\t@SP\n"
                 "\tM=M+1\n";
         }
+        else if(segment == "argument")
+        {
+            out <<
+                "\t@" + to_string(index) + "\n"
+                "\tD=A\n"
+                "\t@ARG\n"
+                "\tA=M\n"
+                "\tA=A+D\n"
+                "\tD=M\n"
+                "\t@SP\n"
+                "\tA=M\n"
+                "\tM=D\n"
+                "\t@SP\n"
+                "\tM=M+1\n";
+        }
     }
     else if(type == CommandType::Pop)
     {
@@ -224,7 +232,7 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
         {
             out <<
                 "\t@SP\n"
-                "\tA=M\n"
+                "\tA=M-1\n"
                 "\tD=M\n"
                 "\t@SP\n"
                 "\tM=M-1\n"
@@ -234,7 +242,30 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\tD=M\n"
                 "\t@LCL\n"
                 "\tA=M\n"
-                "\tD=A=D\n"
+                "\tD=A+D\n"
+                "\t@R14\n"
+                "\tM=D\n"
+                "\t@R13\n"
+                "\tD=M\n"
+                "\t@R14\n"
+                "\tA=M\n"
+                "\tM=D\n";
+        }
+        else if(segment == "argument")
+        {
+            out <<
+                "\t@SP\n"
+                "\tA=M-1\n"
+                "\tD=M\n"
+                "\t@SP\n"
+                "\tM=M-1\n"
+                "\t@R13\n"
+                "\tM=D\n"
+                "\t@" + to_string(index) + "\n"
+                "\tD=M\n"
+                "\t@ARG\n"
+                "\tA=M\n"
+                "\tD=A+D\n"
                 "\t@R14\n"
                 "\tM=D\n"
                 "\t@R13\n"
