@@ -52,6 +52,11 @@ private:
 	{
 		return filename + "$" + std::to_string(branchCount);
 	}
+	
+	inline std::string file_prefix()
+    {
+        return "";
+    }
 };
 
 #endif // CODE_WRITER_H

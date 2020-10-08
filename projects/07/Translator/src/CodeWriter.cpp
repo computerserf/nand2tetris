@@ -267,7 +267,7 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                     "\t@SP\n"
                     "\tM=M+1\n";
             }
-            else if(index == 0)
+            else
             {
                 out <<
                     "\t@THAT\n"
@@ -296,6 +296,20 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\tM=D\n"
                 "\t@SP\n"
                 "\tM=M+1\n";
+        }
+        else if(segment == "static")
+        {
+            if(index > 239)
+                throw runtime_error("Push command: 'static' segment index must be betweeen 0-239");
+            
+            out <<
+                "\t@" + file_prefix() + "." + to_string(index) + "\n"
+                "\tD=M\n"
+                "\t@SP\n"
+                "\tA=M\n"
+                "\tM=D\n"
+                "\t@SP\n"
+                "\tM=M+1\n"
         }
         else
             throw runtime_error("Push command: '" + segment + "' not a valid segment");
@@ -416,7 +430,7 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                     "\t@SP\n"
                     "\tM=M-1\n";
             }
-            else if(index == 0)
+            else
             {
                 out <<
                     "\t@SP\n"
@@ -453,6 +467,20 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\t@R14\n"
                 "\tA=M\n"
                 "\tM=D\n";
+        }
+        else if(segment == "static")
+        {
+            if(index > 239)
+                throw runtime_error("Pop command: 'static' segment index must be betweeen 0-239");
+            
+            out <<
+                "\t@SP\n"
+                "\tA=M-1\n"
+                "\tD=M\n"
+                "\t@" + file_prefix() + "." + to_string(index) + "\n"
+                "\tM=D\n"
+                "\t@SP\n"
+                "\tM=M+1\n"
         }
         else
             throw runtime_error("Pop command: '" + segment + "' not a valid segment");
