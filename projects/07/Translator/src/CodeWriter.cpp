@@ -32,6 +32,8 @@
 
 using namespace std;
 
+const string TEMP{"R5"};
+
 CodeWriter::CodeWriter(ostream& outputStream) : out{outputStream}
 {
 }
@@ -173,7 +175,7 @@ void CodeWriter::writeArithmetic(string command)
 
 void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
 {
-    if(index < 0)
+    if(index < 0 || index > 32767)
         throw runtime_error("Push/pop command: " + to_string(index) + " not a valid indes");
     
     if(type == CommandType::Push)
@@ -240,6 +242,24 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\t@" + to_string(index) + "\n"
                 "\tD=A\n"
                 "\t@THAT\n"
+                "\tA=M\n"
+                "\tA=A+D\n"
+                "\tD=M\n"
+                "\t@SP\n"
+                "\tA=M\n"
+                "\tM=D\n"
+                "\t@SP\n"
+                "\tM=M+1\n";
+        }
+        else if(segment == "temp")
+        {
+            if(index > 7)
+                throw runtime_error("Push command: 'temp' segment index must be betweeen 0-7");
+            
+            out <<
+                "\t@" + to_string(index) + "\n"
+                "\tD=A\n"
+                "\t@" + TEMP + "\n"
                 "\tA=M\n"
                 "\tA=A+D\n"
                 "\tD=M\n"
@@ -342,6 +362,32 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\t@" + to_string(index) + "\n"
                 "\tD=M\n"
                 "\t@THAT\n"
+                "\tA=M\n"
+                "\tD=A+D\n"
+                "\t@R14\n"
+                "\tM=D\n"
+                "\t@R13\n"
+                "\tD=M\n"
+                "\t@R14\n"
+                "\tA=M\n"
+                "\tM=D\n";
+        }
+        else if(segment == "temp")
+        {
+            if(index > 7)
+                throw runtime_error("Pop command: 'temp' segment index must be betweeen 0-7");
+            
+            out <<
+                "\t@SP\n"
+                "\tA=M-1\n"
+                "\tD=M\n"
+                "\t@SP\n"
+                "\tM=M-1\n"
+                "\t@R13\n"
+                "\tM=D\n"
+                "\t@" + to_string(index) + "\n"
+                "\tD=M\n"
+                "\t@" + TEMP + "\n"
                 "\tA=M\n"
                 "\tD=A+D\n"
                 "\t@R14\n"
