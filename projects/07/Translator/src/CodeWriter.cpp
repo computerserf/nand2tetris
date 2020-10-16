@@ -33,6 +33,9 @@
 using namespace std;
 
 const string TEMP{"R5"};
+const int STATIC_SIZE{240};
+const int TEMP_SIZE{8};
+const int POINTER_SIZE{2};
 
 CodeWriter::CodeWriter(ostream& outputStream) : out{outputStream}
 {
@@ -176,7 +179,7 @@ void CodeWriter::writeArithmetic(string command)
 void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
 {
     if(index < 0 || index > 32767)
-        throw runtime_error("Push/pop command: " + to_string(index) + " not a valid indes");
+        throw runtime_error("Push/pop command: " + to_string(index) + " not a valid index");
     
     if(type == CommandType::Push)
     {
@@ -253,8 +256,8 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
         }
         else if(segment == "pointer")
         {
-            if(index > 1)
-                throw runtime_error("Push command: 'pointer' segment index must be betweeen 0 and 1");
+            if(index > POINTER_SIZE - 1)
+                throw runtime_error("Push command: 'pointer' segment index must be betweeen 0-" + to_string(POINTER_SIZE - 1));
             
             if(index == 0)
             {
@@ -281,8 +284,8 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
         }
         else if(segment == "temp")
         {
-            if(index > 7)
-                throw runtime_error("Push command: 'temp' segment index must be betweeen 0-7");
+            if(index > TEMP_SIZE - 1)
+                throw runtime_error("Push command: 'temp' segment index must be betweeen 0-" + to_string(TEMP_SIZE - 1));
             
             out <<
                 "\t@" + to_string(index) + "\n"
@@ -299,8 +302,8 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
         }
         else if(segment == "static")
         {
-            if(index > 239)
-                throw runtime_error("Push command: 'static' segment index must be betweeen 0-239");
+            if(index > STATIC_SIZE - 1)
+                throw runtime_error("Push command: 'static' segment index must be betweeen 0-" + to_string(STATIC_SIZE - 1));
             
             out <<
                 "\t@" + file_prefix() + "." + to_string(index) + "\n"
@@ -309,7 +312,7 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\tA=M\n"
                 "\tM=D\n"
                 "\t@SP\n"
-                "\tM=M+1\n"
+                "\tM=M+1\n";
         }
         else
             throw runtime_error("Push command: '" + segment + "' not a valid segment");
@@ -416,8 +419,8 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
         }
         else if(segment == "pointer")
         {
-            if(index > 1)
-                throw runtime_error("Pop command: 'pointer' segment index must be betweeen 0 and 1");
+            if(index > POINTER_SIZE - 1)
+                throw runtime_error("Pop command: 'pointer' segment index must be betweeen 0-" + to_string(POINTER_SIZE - 1));
             
             if(index == 0)
             {
@@ -444,8 +447,8 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
         }
         else if(segment == "temp")
         {
-            if(index > 7)
-                throw runtime_error("Pop command: 'temp' segment index must be betweeen 0-7");
+            if(index > TEMP_SIZE - 1)
+                throw runtime_error("Pop command: 'temp' segment index must be betweeen 0-" + to_string(TEMP_SIZE - 1));
             
             out <<
                 "\t@SP\n"
@@ -470,8 +473,8 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
         }
         else if(segment == "static")
         {
-            if(index > 239)
-                throw runtime_error("Pop command: 'static' segment index must be betweeen 0-239");
+            if(index > STATIC_SIZE - 1)
+                throw runtime_error("Pop command: 'static' segment index must be betweeen 0-" + to_string(STATIC_SIZE - 1));
             
             out <<
                 "\t@SP\n"
@@ -480,7 +483,7 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\t@" + file_prefix() + "." + to_string(index) + "\n"
                 "\tM=D\n"
                 "\t@SP\n"
-                "\tM=M+1\n"
+                "\tM=M+1\n";
         }
         else
             throw runtime_error("Pop command: '" + segment + "' not a valid segment");
