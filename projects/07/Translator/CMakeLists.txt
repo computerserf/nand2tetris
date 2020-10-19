@@ -3,7 +3,7 @@
 project ("Translator")
 
 
-# Add Boost
+# Find Boost
 find_package(Boost COMPONENTS filesystem system REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 
@@ -14,4 +14,5 @@ add_executable (Translator "src/Translator.cpp" "src/Parser.cpp" "src/CodeWriter
 target_compile_features(Translator PUBLIC cxx_std_11)
 set_target_properties(Translator PROPERTIES CXX_EXTENSIONS OFF)
 
+# Link Boost
 target_link_libraries(Translator LINK_PUBLIC ${Boost_LIBRARIES})
