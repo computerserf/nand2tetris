@@ -41,9 +41,19 @@ CodeWriter::CodeWriter(ostream& outputStream) : out{outputStream}
 {
 }
 
-void CodeWriter::setFilename(string f)
+void CodeWriter::setFilename(string filename)
 {
-	filename = f;
+    static const std::string command_expresssion = R"(^(*)\.vm$)";
+    static const regex e{command_expresssion};
+    
+    smatch matches;
+    regex_match(filename, matches, e);
+    
+    if(matches.size() > 1)
+        prefix = matches[1];
+    else
+        throw runtime_error("File prefix in '" + filename + "' not found");
+	
 	branchCount = 0;
 
 	out << endl << "// " << filename << ":" << endl;

@@ -39,23 +39,23 @@ class CodeWriter
 {
 public:
 	CodeWriter(std::ostream &outputStream);
-	void setFilename(std::string fileName);
+	void setFilename(std::string filename);
 	void writeArithmetic(std::string command);
 	void writePushPop(CommandType type, std::string segment, int index);
 
 private:
 	std::ostream &out;
-	std::string filename;
+	std::string prefix;
 	unsigned int branchCount;
 
 	inline std::string branchLabel()
 	{
-		return filename + "$" + std::to_string(branchCount);
+		return prefix + ".vm" + "$" + std::to_string(branchCount);
 	}
 	
 	inline std::string file_prefix()
     {
-        return "";
+        return prefix;
     }
 };
 
