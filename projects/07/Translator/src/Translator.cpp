@@ -27,7 +27,52 @@
  */
 #include "Translator.h"
 
+#include <boost/filesystem.hpp>
+
+#include <iostream>
+#include <exception>
+
+using namespace std;
+
+Translator::Translator(std::vector<std::string> arguments)
+{
+    if(arguments.size() != 2)
+        throw runtime_error("Error: Program only takes 1 argument");
+    
+    inputFilename = arguments[1];
+}
+
+void Translator::run()
+{
+    
+}
+
 int main(int argc, char *argv[])
 {
+    // collect arguments passed to the program
+    vector<string> arguments;
+    
+	for(int i = 0; i < argc; i++)
+    {
+        arguments.push_back(argv[i]);
+    }
+    
+    try
+    {    
+        // pass them to the assembler
+        Translator program(arguments);
+        program.run();
+    }
+    catch(exception &e)
+    {
+        cerr << e.what() << endl;
+        return 1;
+    }
+    catch(...)
+    {
+        cerr << "Unknown error!" << endl;
+        return 2;
+    }
+    
     return 0;
 }
