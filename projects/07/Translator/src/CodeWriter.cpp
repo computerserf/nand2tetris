@@ -87,7 +87,7 @@ void CodeWriter::writeArithmetic(string command)
 	{
 		out <<
 			"\t@SP\n"
-			"\tA=M\n"
+			"\tA=M-1\n"
 			"\tM=-M\n";
 	}
 	else if (command == "eq")
@@ -103,14 +103,14 @@ void CodeWriter::writeArithmetic(string command)
             "\t@SP\n"
             "\tA=M-1\n"
             "\tA=A-1\n"
-			"\tM=-1\n"
+			"\tM=0\n"
 			"\t@" + branchLabel() + "E\n"
 			"\t0;JMP\n"
 			"(" + branchLabel() + "T)\n"
             "\t@SP\n"
             "\tA=M-1\n"
             "\tA=A-1\n"
-			"\tM=0\n"
+			"\tM=-1\n"
 			"(" + branchLabel() + "E)\n"
 			"\t@SP\n"
 			"\tM=M-1\n";
@@ -130,14 +130,14 @@ void CodeWriter::writeArithmetic(string command)
 			"\t@SP\n"
             "\tA=M-1\n"
             "\tA=A-1\n"
-			"\tM=-1\n"
+			"\tM=0\n"
 			"\t@" + branchLabel() + "E\n"
 			"\t0;JMP\n"
 			"(" + branchLabel() + "T)\n"
             "\t@SP\n"
             "\tA=M-1\n"
             "\tA=A-1\n"
-			"\tM=0\n"
+			"\tM=-1\n"
 			"(" + branchLabel() + "E)\n"
 			"\t@SP\n"
 			"\tM=M-1\n";
@@ -157,14 +157,14 @@ void CodeWriter::writeArithmetic(string command)
             "\t@SP\n"
             "\tA=M-1\n"
             "\tA=A-1\n"
-			"\tM=-1\n"
+			"\tM=0\n"
 			"\t@" + branchLabel() + "E\n"
 			"\t0;JMP\n"
 			"(" + branchLabel() + "T)\n"
             "\t@SP\n"
             "\tA=M-1\n"
             "\tA=A-1\n"
-			"\tM=0\n"
+			"\tM=-1\n"
 			"(" + branchLabel() + "E)\n"
 			"\t@SP\n"
 			"\tM=M-1\n";
@@ -197,7 +197,7 @@ void CodeWriter::writeArithmetic(string command)
 	{
 	out <<
 		"\t@SP\n"
-		"\tA=M\n"
+		"\tA=M-1\n"
 		"\tM=!M\n";
 	}
 	else
