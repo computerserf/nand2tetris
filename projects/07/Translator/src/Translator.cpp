@@ -27,7 +27,6 @@
  */
 #include "Translator.h"
 #include "Parser.h"
-#include "CodeWriter.h"
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #include <boost/filesystem.hpp>
@@ -49,14 +48,60 @@ Translator::Translator(vector<string> arguments)
     inputFilename = arguments[1];
 }
 
-bool is_vm(string filename)
+void Translator::translate(string inputFilename, CodeWriter &writer)
 {
-    return false;
-}
-
-void translate(string input_filename, CodeWriter &code_writer)
-{
+    // prepare file for parsing
+    std::ifstream input(inputFilename);    
+    Parser parser(input);
     
+    writer.setFilename(path(inputFilename).filename().string());
+    
+    try
+    {
+        // while there is more to parse
+        while(parser.hasMoreCommands())
+        {
+            // parse it
+            parser.advance();
+            
+            CommandType type = parser.getCommandType();
+            
+            // write the correct command
+            switch(type)
+            {
+                case CommandType::Arithmetic:
+                {
+                    writer.writeArithmetic(parser.getArg1());
+                    break;
+                }
+                
+                case CommandType::Push:
+                case CommandType::Pop:
+                {
+                    try
+                    {
+                        int index = stoi(parser.getArg2());
+                        writer.writePushPop(type, parser.getArg1(), index);
+                    }
+                    catch(invalid_argument &e)
+                    {
+                        throw runtime_error("Could not convert '" + parser.getArg2() + "' to integer");
+                    }
+                    catch(out_of_range &e)
+                    {
+                        throw runtime_error("'" + parser.getArg2() + "' does not fit in an integer");
+                    }
+                }
+                
+                default:
+                    break;
+            }
+        }
+    }
+    catch(runtime_error &e)
+    {
+        throw runtime_error(inputFilename + " (" + to_string(parser.getLineNumber()) + "): " + e.what());
+    }
 }
 
 void Translator::run()
@@ -71,7 +116,7 @@ void Translator::run()
         {
             if(is_vm(f.path().filename().string()))
             {
-                string input_name = path(inputFilename).string();
+                string input_name = path(f).string();
                 translate(input_name, cw);
             }
         }
@@ -84,8 +129,7 @@ void Translator::run()
             std::ofstream out(path(inputFilename).filename().stem().string() + + "." + OUTPUT_PREFIX);
             CodeWriter cw(out);
             
-            string input_name = path(inputFilename).string();
-            translate(input_name, cw);
+            translate(inputFilename, cw);
         }
         else
             throw runtime_error("Error: '" + inputFilename + "' does not end in a .vm extension");

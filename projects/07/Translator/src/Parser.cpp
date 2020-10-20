@@ -137,11 +137,13 @@ bool isMemoryAccess(const string &s)
 
 void Parser::parseCommmand(const string &command)
 {
-    static const std::string command_expresssion = R"(^(\w+)(\s*\w+){0,2}$)";
+    static const std::string command_expresssion = R"(^(\w+)(\s*\w+)?(\s*\w+)?$)";
     static const regex e{command_expresssion};
     
     smatch matches;
     regex_match(command, matches, e);
+    
+    // cout << command << endl;
     
     if(matches.size() > 1)
     {
@@ -149,7 +151,7 @@ void Parser::parseCommmand(const string &command)
         
         if(isArithmetic(matches[1]))
         {
-            if(matches.size() > 2)
+            if(matches[2] != "")
             {
                 type = CommandType::Unknown;
                 throw runtime_error("Could not parse arithmetic command. Check syntax.");;
@@ -163,10 +165,10 @@ void Parser::parseCommmand(const string &command)
         }
         else if(isMemoryAccess(matches[1]))
         {
-            if(matches.size() != 4)
+            if(matches[3] == "")
             {
                 type = CommandType::Unknown;
-                throw runtime_error("Could not memory access command. Check syntax.");
+                throw runtime_error("Could not parse memory access command. Check syntax.");
             }
             else
             {
@@ -208,66 +210,3 @@ string Parser::stripLine(const string &line)
     
     return trim(str);
 }
-
-/*
-
-const string label_expression = R"(^\(([a-zA-z_\.\$:][a-zA-z_\.\$:0-9]*)\)$)";
-
-void Parser::parseLabel(const string &s)
-{
-    regex e{label_expression};
-    smatch matches;
-    
-    regex_match(s, matches, e);
-    
-    if(matches.size() > 1)
-        symbol = matches[1];
-    else
-    {
-        type = CommandType::Unknown;
-        throw runtime_error("Could not parse L-command. Check syntax.");
-    }
-}
-
-const string address_expression = R"(^@(\d+|[a-zA-z_\.\$:][a-zA-z_\.\$:0-9]*)$)";
-
-void Parser::parseAddress(const string &s)
-{
-    regex e{address_expression};
-    smatch matches;
-    
-    regex_match(s, matches, e);
-    
-    if(matches.size() > 1)
-        symbol = matches[1];
-    else
-    {
-        type = CommandType::Unknown;
-        throw runtime_error("Could not parse A-command. Check syntax.");
-    }
-}
-
-const string computation_expession = R"(^(?:([AMD]{1,3})=)?(0|-?1|[\-!]?[ADM]|[ADM][\+\-&|](?:1|[ADM]))(?:;([A-Z]{3}))?$)";
-
-void Parser::parseComputation(const string &s)
-{
-    regex e{computation_expession};
-    smatch matches;
-    
-    regex_match(s, matches, e);
-    
-    if(matches.size() > 3)
-    {
-        dest = matches[1];
-        comp = matches[2];
-        jump = matches[3];
-    }
-    
-    else
-    {
-        type = CommandType::Unknown;
-        throw runtime_error("Could not parse C-command. Check syntax.");
-    }
-}
-
-*/

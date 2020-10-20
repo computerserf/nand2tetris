@@ -43,7 +43,7 @@ CodeWriter::CodeWriter(ostream& outputStream) : out{outputStream}
 
 void CodeWriter::setFilename(string filename)
 {
-    static const std::string command_expresssion = R"(^(*)\.vm$)";
+    static const std::string command_expresssion = R"((.*)\.vm$)";
     static const regex e{command_expresssion};
     
     smatch matches;

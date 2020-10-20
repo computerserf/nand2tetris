@@ -29,6 +29,8 @@
 #ifndef TRANSLATOR_H
 #define TRANSLATOR_H
 
+#include "CodeWriter.h"
+
 #include <string>
 #include <vector>
 
@@ -40,6 +42,13 @@ public:
         
 private:
     std::string inputFilename;
+    
+    inline bool is_vm(std::string filename)
+    {
+        return filename.substr(filename.length() - 3, 3) == ".vm";
+    }
+    
+    void translate(std::string inputFilename, CodeWriter& writer);
 };
 
 #endif // TRANSLATOR_H
