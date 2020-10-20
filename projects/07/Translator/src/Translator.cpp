@@ -66,6 +66,8 @@ void Translator::translate(string inputFilename, CodeWriter &writer)
             
             CommandType type = parser.getCommandType();
             
+            writer.writeAnnotation(type, parser.getArg1(), parser.getArg2());
+            
             // write the correct command
             switch(type)
             {

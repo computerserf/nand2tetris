@@ -100,10 +100,16 @@ void CodeWriter::writeArithmetic(string command)
 			"\tD=M-D\n"
 			"\t@" + branchLabel() + "T\n"
 			"\tD;JEQ\n"
+            "\t@SP\n"
+            "\tA=M-1\n"
+            "\tA=A-1\n"
 			"\tM=-1\n"
 			"\t@" + branchLabel() + "E\n"
 			"\t0;JMP\n"
 			"(" + branchLabel() + "T)\n"
+            "\t@SP\n"
+            "\tA=M-1\n"
+            "\tA=A-1\n"
 			"\tM=0\n"
 			"(" + branchLabel() + "E)\n"
 			"\t@SP\n"
@@ -121,10 +127,16 @@ void CodeWriter::writeArithmetic(string command)
 			"\tD=M-D\n"
 			"\t@" + branchLabel() + "T\n"
 			"\tD;JGT\n"
+			"\t@SP\n"
+            "\tA=M-1\n"
+            "\tA=A-1\n"
 			"\tM=-1\n"
 			"\t@" + branchLabel() + "E\n"
 			"\t0;JMP\n"
 			"(" + branchLabel() + "T)\n"
+            "\t@SP\n"
+            "\tA=M-1\n"
+            "\tA=A-1\n"
 			"\tM=0\n"
 			"(" + branchLabel() + "E)\n"
 			"\t@SP\n"
@@ -142,10 +154,16 @@ void CodeWriter::writeArithmetic(string command)
 			"\tD=M-D\n"
 			"\t@" + branchLabel() + "T\n"
 			"\tD;JLT\n"
+            "\t@SP\n"
+            "\tA=M-1\n"
+            "\tA=A-1\n"
 			"\tM=-1\n"
 			"\t@" + branchLabel() + "E\n"
 			"\t0;JMP\n"
 			"(" + branchLabel() + "T)\n"
+            "\t@SP\n"
+            "\tA=M-1\n"
+            "\tA=A-1\n"
 			"\tM=0\n"
 			"(" + branchLabel() + "E)\n"
 			"\t@SP\n"
@@ -500,4 +518,23 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
     }
     else
         throw runtime_error("Push/pop command: invalid command type");
+}
+
+
+void CodeWriter::writeAnnotation(CommandType type, std::string argument1, std::string argument2)
+{
+    if(type == CommandType::Arithmetic)
+    {
+        out << "\t// " << argument1 << endl;
+    }
+    else if(type == CommandType::Push)
+    {
+        out << "\t// push " << argument1 << " " << argument2 << endl;
+    }
+    else if(type == CommandType::Pop)
+    {
+        out << "\t// pop " << argument1 << " " << argument2 << endl;
+    }
+    else
+        out << "\t// unrecognized VM command" << endl;
 }

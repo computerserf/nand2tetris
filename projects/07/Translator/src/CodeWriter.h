@@ -42,6 +42,7 @@ public:
 	void setFilename(std::string filename);
 	void writeArithmetic(std::string command);
 	void writePushPop(CommandType type, std::string segment, int index);
+    void writeAnnotation(CommandType type, std::string argument1, std::string argument2);
 
 private:
 	std::ostream &out;
