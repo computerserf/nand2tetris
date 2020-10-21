@@ -111,16 +111,27 @@ void Translator::run()
     // if the file is a directory, parse and translate all .vm files
     if(is_directory(inputFilename))
     {
-        std::ofstream out(path(inputFilename).filename().stem().string() + "." + OUTPUT_PREFIX);
+        string outputFilename = path(inputFilename).filename().string() + "." + OUTPUT_PREFIX;
+        std::ofstream out(outputFilename);
         CodeWriter cw(out);
+        
+        bool empty = true;
         
         for(auto&& f : directory_iterator(path(inputFilename)))
         {
             if(is_vm(f.path().filename().string()))
             {
+                empty = false;
                 string input_name = path(f).string();
                 translate(input_name, cw);
             }
+        }
+        
+        if(empty)
+        {
+            out.close();
+            remove(outputFilename);
+            throw runtime_error("Error: Directory '" + inputFilename + "' has no .vm files");
         }
     }
     // otherwise, if the file is a regular file, make sure it's a vm file and translate it

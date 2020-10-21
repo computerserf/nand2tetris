@@ -319,7 +319,6 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\t@" + to_string(index) + "\n"
                 "\tD=A\n"
                 "\t@" + TEMP + "\n"
-                "\tA=M\n"
                 "\tA=A+D\n"
                 "\tD=M\n"
                 "\t@SP\n"
@@ -364,7 +363,7 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\t@R13\n"
                 "\tM=D\n"
                 "\t@" + to_string(index) + "\n"
-                "\tD=M\n"
+                "\tD=A\n"
                 "\t@LCL\n"
                 "\tA=M\n"
                 "\tD=A+D\n"
@@ -387,7 +386,7 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\t@R13\n"
                 "\tM=D\n"
                 "\t@" + to_string(index) + "\n"
-                "\tD=M\n"
+                "\tD=A\n"
                 "\t@ARG\n"
                 "\tA=M\n"
                 "\tD=A+D\n"
@@ -410,7 +409,7 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\t@R13\n"
                 "\tM=D\n"
                 "\t@" + to_string(index) + "\n"
-                "\tD=M\n"
+                "\tD=A\n"
                 "\t@THIS\n"
                 "\tA=M\n"
                 "\tD=A+D\n"
@@ -433,7 +432,7 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\t@R13\n"
                 "\tM=D\n"
                 "\t@" + to_string(index) + "\n"
-                "\tD=M\n"
+                "\tD=A\n"
                 "\t@THAT\n"
                 "\tA=M\n"
                 "\tD=A+D\n"
@@ -455,7 +454,7 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 out <<
                     "\t@SP\n"
                     "\tA=M-1\n"
-                    "\tD=M\t"
+                    "\tD=M\n"
                     "\t@THIS\n"
                     "\tM=D\n"
                     "\t@SP\n"
@@ -466,7 +465,7 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 out <<
                     "\t@SP\n"
                     "\tA=M-1\n"
-                    "\tD=M\t"
+                    "\tD=M\n"
                     "\t@THAT\n"
                     "\tM=D\n"
                     "\t@SP\n"
@@ -487,9 +486,8 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\t@R13\n"
                 "\tM=D\n"
                 "\t@" + to_string(index) + "\n"
-                "\tD=M\n"
+                "\tD=A\n"
                 "\t@" + TEMP + "\n"
-                "\tA=M\n"
                 "\tD=A+D\n"
                 "\t@R14\n"
                 "\tM=D\n"
@@ -511,7 +509,7 @@ void CodeWriter::writePushPop(CommandType type, std::string segment, int index)
                 "\t@" + file_prefix() + "." + to_string(index) + "\n"
                 "\tM=D\n"
                 "\t@SP\n"
-                "\tM=M+1\n";
+                "\tM=M-1\n";
         }
         else
             throw runtime_error("Pop command: '" + segment + "' not a valid segment");
