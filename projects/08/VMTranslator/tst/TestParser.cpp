@@ -24,7 +24,9 @@
  */
 
 #include <gtest/gtest.h>
+
 #include <sstream>
+#include <stdexcept>
 
 #include "../src/Parser.h"
 
@@ -68,11 +70,11 @@ TEST(ParserTest, TestDefault_advance)
 // special character invalid command
 TEST(ParserTest, TestSpecialCharacterInvalidCommand_advance)
 {
-    istringstream input("eu$lo.1 $_e4. tp");
+    istringstream input("eulo.1 :s_e4. tp");
     Parser p(input);
-    p.advance();
+    ASSERT_THROW(p.advance(), runtime_error);
     ASSERT_EQ(p.getCommandType(), CommandType::Unknown);
-    ASSERT_EQ(p.getArg1(), "$_e4.");
+    ASSERT_EQ(p.getArg1(), ":s_e4.");
     ASSERT_EQ(p.getArg2(), "tp");
 }
 
@@ -81,7 +83,7 @@ TEST(ParserTest, TestWithoutSpecialCharacterInvalidCommand_advance)
 {
     istringstream input("dedf a b");
     Parser p(input);
-    p.advance();
+    ASSERT_THROW(p.advance(), runtime_error);
     ASSERT_EQ(p.getCommandType(), CommandType::Unknown);
     ASSERT_EQ(p.getArg1(), "a");
     ASSERT_EQ(p.getArg2(), "b");
@@ -103,7 +105,7 @@ TEST(ParserTest, Test1Command2Argument_advance)
 {
     istringstream input("pop 10");
     Parser p(input);
-    p.advance();
+    ASSERT_THROW(p.advance(), runtime_error);
     ASSERT_EQ(p.getCommandType(), CommandType::Unknown);
     ASSERT_EQ(p.getArg1(), "10");
     ASSERT_EQ(p.getArg2(), "");
@@ -123,9 +125,9 @@ TEST(ParserTest, TestValid2Command_advance)
 // more than 2 argument command
 TEST(ParserTest, Test3Command_advance)
 {
-    istringstream input("pop static 5 e$");
+    istringstream input("pop static 5 e_");
     Parser p(input);
-    p.advance();
+    ASSERT_THROW(p.advance(), runtime_error);
     ASSERT_EQ(p.getCommandType(), CommandType::Unknown);
     ASSERT_EQ(p.getArg1(), "");
     ASSERT_EQ(p.getArg2(), "");

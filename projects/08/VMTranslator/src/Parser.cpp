@@ -135,9 +135,30 @@ bool isMemoryAccess(const string &s)
 	return (s == "push" || s == "pop");
 }
 
+bool isFlow(const string &s)
+{
+	return (s == "label" || s == "goto" || s == "if-goto");
+}
+
+bool isFunctionCall(const string &s)
+{
+	return (s == "function" || s == "call" || s == "RETURN");
+}
+
+bool validLabel(const string &s)
+{
+    static const std::string command_expresssion = R"(^(\s*\D[\w\:_\.]+)$)";
+    static const regex e{command_expresssion};
+    
+    smatch matches;
+    regex_match(s, matches, e);
+    
+    return matches.size() > 1;
+}
+
 void Parser::parseCommmand(const string &command)
 {
-    static const std::string command_expresssion = R"(^(\w+)(\s*\w+)?(\s*\w+)?$)";
+    static const std::string command_expresssion = R"(^(\D[\w\:_\.]+)(\s*(?:\D[\w\:_\.]+|\d+))(\s*(?:\D[\w\:_\.]+|\d+))?$)";
     static const regex e{command_expresssion};
     
     smatch matches;
@@ -148,6 +169,8 @@ void Parser::parseCommmand(const string &command)
     if(matches.size() > 1)
     {
         // match found; parse command
+        arg1 = trim(matches[2]);
+        arg2 = trim(matches[3]);
         
         if(isArithmetic(matches[1]))
         {
@@ -176,11 +199,39 @@ void Parser::parseCommmand(const string &command)
                     type = CommandType::Push;
                 else
                     type = CommandType::Pop;
-                
-                arg1 = trim(matches[2]);
-                arg2 = trim(matches[3]);
             }
             
+        }
+        else if(isFlow(matches[1]))
+        {
+            if(matches[3] != "" || !validLabel(matches[2]))
+            {
+                type = CommandType::Unknown;
+                throw runtime_error("Could not parse flow command. Check syntax.");
+            }
+            else
+            {
+                if(matches[1] == "label")
+                    type = CommandType::Label;
+                else if(matches[1] == "goto")
+                    type = CommandType::Goto;
+                else
+                    type = CommandType::If;
+            }
+        }
+        else if(isFunctionCall(matches[1]))
+        {
+            if(matches[1] == "function" && validLabel(matches[2]))
+                type = CommandType::Function;
+            else if(matches[1] == "call" && validLabel(matches[2]))
+                type = CommandType::Call;
+            else if(matches[1] == "return" && matches[2] == "")
+                type = CommandType::Return;
+            else
+            {
+                type = CommandType::Unknown;
+                throw runtime_error("Could not parse function-call command. Check syntax.");
+            }
         }
         else
         {

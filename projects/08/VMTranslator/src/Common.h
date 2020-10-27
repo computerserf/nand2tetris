@@ -34,7 +34,7 @@ enum class CommandType
     Arithmetic,
     Push,
     Pop,
-    Lable,
+    Label,
     Goto,
     If,
     Function,
@@ -68,5 +68,17 @@ inline std::string ntobs(std::string n)
 {
     return std::bitset<15>(stoi(n)).to_string();
 }
+
+// https://stackoverflow.com/questions/29506426/get-google-test-exception-throw-message
+inline bool isInteger(const std::string & s)
+{
+   if(s.empty() || ((!isdigit(s[0])) && (s[0] != '-') && (s[0] != '+'))) return false;
+
+   char * p;
+   strtol(s.c_str(), &p, 10);
+
+   return (*p == 0);
+}
+
 
 #endif // COMMON_H
