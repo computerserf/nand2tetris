@@ -29,6 +29,7 @@
 #include "CodeWriter.h"
 
 #include <stdexcept>
+#include <cassert>
 
 using namespace std;
 
@@ -72,6 +73,13 @@ void CodeWriter::writeInit()
     out <<
         "\t@Sys.init\n"
         "\t0;JMP\n";
+}
+
+void CodeWriter::writeLabel(std::string label)
+{
+    assert(label.length() > 0);
+    
+    out << "(" << label << ")" << endl;
 }
 
 
@@ -548,6 +556,10 @@ void CodeWriter::writeAnnotation(CommandType type, std::string argument1, std::s
     else if(type == CommandType::Pop)
     {
         out << "\t// pop " << argument1 << " " << argument2 << endl;
+    }
+    else if(type == CommandType::Label)
+    {
+        out << "\t// label " << argument1 << " " << argument2 << endl;
     }
     else
         out << "\t// unrecognized VM command" << endl;

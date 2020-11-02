@@ -56,10 +56,21 @@ bool compareFiles(const std::string& p1, const std::string& p2) {
 using namespace std;
 
 // valid output
-TEST(CodeWriterTest, TestValidOutput_writeIni)
+TEST(CodeWriterTest, TestValidOutput_writeInit)
 {
     ofstream out("CodeWriter/writeInit_out");
     CodeWriter cw(out);
+    cw.writeInit();
+    out.close();
+    ASSERT_TRUE(compareFiles("CodeWriter/writeInit_out", "CodeWriter/writeInit_expected"));
+}
+
+// valid output
+TEST(CodeWriterTest, TestValidOutput_writeLabel)
+{
+    ofstream out("CodeWriter/writeLabel_out");
+    CodeWriter cw(out);
+    cw.writeAnnotation(CommandType::Label, "my_label", "");
     cw.writeInit();
     out.close();
     ASSERT_TRUE(compareFiles("CodeWriter/writeInit_out", "CodeWriter/writeInit_expected"));
