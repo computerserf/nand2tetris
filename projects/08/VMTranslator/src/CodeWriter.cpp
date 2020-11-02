@@ -59,6 +59,22 @@ void CodeWriter::setFilename(string filename)
 	out << endl << "// " << filename << ":" << endl;
 }
 
+void CodeWriter::writeInit()
+{
+    out << "\t// bootstrap code" << endl;
+    out << "\t// SP = 256" << endl;
+    out <<
+        "\t@256\n"
+        "\tD=A\n"
+        "\t@SP\n"
+        "\tM=D\n";
+    out << "\t// call Sys.init" << endl;
+    out <<
+        "\t@Sys.init\n"
+        "\t0;JMP\n";
+}
+
+
 void CodeWriter::writeArithmetic(string command)
 {
 	if(command == "add")
