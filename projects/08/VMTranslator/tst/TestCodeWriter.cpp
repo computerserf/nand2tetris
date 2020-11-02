@@ -71,7 +71,7 @@ TEST(CodeWriterTest, TestValidOutput_writeLabel)
     ofstream out("CodeWriter/writeLabel_out");
     CodeWriter cw(out);
     cw.writeAnnotation(CommandType::Label, "my_label", "");
-    cw.writeInit();
+    cw.writeLabel("my_label");
     out.close();
-    ASSERT_TRUE(compareFiles("CodeWriter/writeInit_out", "CodeWriter/writeInit_expected"));
+    ASSERT_TRUE(compareFiles("CodeWriter/writeLabel_out", "CodeWriter/writeLabel_expected"));
 }
