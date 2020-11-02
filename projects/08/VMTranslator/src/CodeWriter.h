@@ -42,13 +42,18 @@ public:
 	void setFilename(std::string filename);
     void writeInit();
     void writeLabel(std::string label);
+    void writeGoto(std::string label);
 	void writeArithmetic(std::string command);
 	void writePushPop(CommandType type, std::string segment, int index);
     void writeAnnotation(CommandType type, std::string argument1, std::string argument2);
+    
+protected:
+    void setFunctionName(std::string name);
 
 private:
 	std::ostream &out;
 	std::string prefix;
+    std::string function_name;
 	unsigned int branchCount;
 
 	inline std::string branchLabel()

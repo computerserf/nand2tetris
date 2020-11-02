@@ -55,11 +55,25 @@ bool compareFiles(const std::string& p1, const std::string& p2) {
 
 using namespace std;
 
+class CodeWriterWrapper : public CodeWriter
+{
+public:
+    
+   CodeWriterWrapper(ostream &outputStream) : CodeWriter(outputStream)
+   {
+   }
+   
+   void setFunctionName(string name)
+   {
+       CodeWriter::setFunctionName(name);
+   }
+};
+
 // valid output
 TEST(CodeWriterTest, TestValidOutput_writeInit)
 {
     ofstream out("CodeWriter/writeInit_out");
-    CodeWriter cw(out);
+    CodeWriterWrapper cw(out);
     cw.writeInit();
     out.close();
     ASSERT_TRUE(compareFiles("CodeWriter/writeInit_out", "CodeWriter/writeInit_expected"));
@@ -69,9 +83,22 @@ TEST(CodeWriterTest, TestValidOutput_writeInit)
 TEST(CodeWriterTest, TestValidOutput_writeLabel)
 {
     ofstream out("CodeWriter/writeLabel_out");
-    CodeWriter cw(out);
+    CodeWriterWrapper cw(out);
+    cw.setFunctionName("_");
     cw.writeAnnotation(CommandType::Label, "my_label", "");
     cw.writeLabel("my_label");
     out.close();
     ASSERT_TRUE(compareFiles("CodeWriter/writeLabel_out", "CodeWriter/writeLabel_expected"));
+}
+
+// valid output
+TEST(CodeWriterTest, TestValidOutput_writeGoto)
+{
+    ofstream out("CodeWriter/writeGoto_out");
+    CodeWriterWrapper cw(out);
+    cw.setFunctionName("_");
+    cw.writeAnnotation(CommandType::Goto, "my_label", "");
+    cw.writeGoto("my_label");
+    out.close();
+    ASSERT_TRUE(compareFiles("CodeWriter/writeGoto_out", "CodeWriter/writeGoto_expected"));
 }

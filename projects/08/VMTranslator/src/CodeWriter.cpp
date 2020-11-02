@@ -78,10 +78,20 @@ void CodeWriter::writeInit()
 void CodeWriter::writeLabel(std::string label)
 {
     assert(label.length() > 0);
+    assert(function_name.length() > 0);
     
-    out << "(" << label << ")" << endl;
+    out << "(" << function_name << "$" << label << ")" << endl;
 }
 
+void CodeWriter::writeGoto(std::string label)
+{
+    assert(label.length() > 0);
+    assert(function_name.length() > 0);
+    
+    out
+        << "\t@" << function_name << "$" << label << endl
+        << "\t0;JMP\n";
+}
 
 void CodeWriter::writeArithmetic(string command)
 {
@@ -559,8 +569,19 @@ void CodeWriter::writeAnnotation(CommandType type, std::string argument1, std::s
     }
     else if(type == CommandType::Label)
     {
-        out << "\t// label " << argument1 << " " << argument2 << endl;
+        out << "\t// label " << argument1 << endl;
+    }
+    else if(type == CommandType::Goto)
+    {
+        out << "\t// goto " << argument1 << endl;
     }
     else
         out << "\t// unrecognized VM command" << endl;
+}
+
+
+
+void CodeWriter::setFunctionName(std::string name)
+{
+    function_name = name;
 }
