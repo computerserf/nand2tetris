@@ -37,6 +37,7 @@ const string TEMP{"R5"};
 const int STATIC_SIZE{240};
 const int TEMP_SIZE{8};
 const int POINTER_SIZE{2};
+const int BOOTSTRAP_SP{256};
 
 CodeWriter::CodeWriter(ostream& outputStream) : out{outputStream}
 {
@@ -64,11 +65,10 @@ void CodeWriter::writeInit()
 {
     out << "\t// bootstrap code" << endl;
     out << "\t// SP = 256" << endl;
-    out <<
-        "\t@256\n"
-        "\tD=A\n"
-        "\t@SP\n"
-        "\tM=D\n";
+    out <<  "\t@" << to_string(BOOTSTRAP_SP) << endl
+        <<  "\tD=A\n"
+            "\t@SP\n"
+            "\tM=D\n";
     out << "\t// call Sys.init" << endl;
     out <<
         "\t@Sys.init\n"
@@ -91,6 +91,21 @@ void CodeWriter::writeGoto(std::string label)
     out
         << "\t@" << function_name << "$" << label << endl
         << "\t0;JMP\n";
+}
+
+void CodeWriter::writeIf(std::string label)
+{
+    assert(label.length() > 0);
+    assert(function_name.length() > 0);
+    
+    out
+        <<  "\t@SP\n"
+            "\tA=M-1\n"
+            "\tD=M\n"
+            "\t@SP\n"
+            "\tM=M-1\n"
+        << "\t@" << function_name << "$" << label << endl
+        << "\tD;JNE\n";
 }
 
 void CodeWriter::writeArithmetic(string command)
@@ -574,6 +589,10 @@ void CodeWriter::writeAnnotation(CommandType type, std::string argument1, std::s
     else if(type == CommandType::Goto)
     {
         out << "\t// goto " << argument1 << endl;
+    }
+    else if(type == CommandType::If)
+    {
+        out << "\t// if-goto " << argument1 << endl;
     }
     else
         out << "\t// unrecognized VM command" << endl;

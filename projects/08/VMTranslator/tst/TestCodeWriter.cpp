@@ -102,3 +102,15 @@ TEST(CodeWriterTest, TestValidOutput_writeGoto)
     out.close();
     ASSERT_TRUE(compareFiles("CodeWriter/writeGoto_out", "CodeWriter/writeGoto_expected"));
 }
+
+// valid output
+TEST(CodeWriterTest, TestValidOutput_writeIf)
+{
+    ofstream out("CodeWriter/writeIf_out");
+    CodeWriterWrapper cw(out);
+    cw.setFunctionName("_");
+    cw.writeAnnotation(CommandType::If, "my_label", "");
+    cw.writeIf("my_label");
+    out.close();
+    ASSERT_TRUE(compareFiles("CodeWriter/writeIf_out", "CodeWriter/writeIf_expected"));
+}

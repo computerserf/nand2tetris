@@ -43,6 +43,7 @@ public:
     void writeInit();
     void writeLabel(std::string label);
     void writeGoto(std::string label);
+    void writeIf(std::string label);
 	void writeArithmetic(std::string command);
 	void writePushPop(CommandType type, std::string segment, int index);
     void writeAnnotation(CommandType type, std::string argument1, std::string argument2);
