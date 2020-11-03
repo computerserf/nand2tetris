@@ -75,7 +75,7 @@ void CodeWriter::writeInit()
         "\t0;JMP\n";
 }
 
-void CodeWriter::writeLabel(std::string label)
+void CodeWriter::writeLabel(string label)
 {
     assert(label.length() > 0);
     assert(function_name.length() > 0);
@@ -83,7 +83,7 @@ void CodeWriter::writeLabel(std::string label)
     out << "(" << function_name << "$" << label << ")" << endl;
 }
 
-void CodeWriter::writeGoto(std::string label)
+void CodeWriter::writeGoto(string label)
 {
     assert(label.length() > 0);
     assert(function_name.length() > 0);
@@ -93,7 +93,7 @@ void CodeWriter::writeGoto(std::string label)
         << "\t0;JMP\n";
 }
 
-void CodeWriter::writeIf(std::string label)
+void CodeWriter::writeIf(string label)
 {
     assert(label.length() > 0);
     assert(function_name.length() > 0);
@@ -106,6 +106,85 @@ void CodeWriter::writeIf(std::string label)
             "\tM=M-1\n"
         << "\t@" << function_name << "$" << label << endl
         << "\tD;JNE\n";
+}
+
+void CodeWriter::writeCall(string functionName, int numArgs)
+{
+    assert(functionName.length() > 0);
+    
+    if(numArgs < 0)
+        throw runtime_error("Call command: Number of arguments must be positive");
+    
+    string returnLabel = nextReturnLabel();
+    
+    out <<
+            // push return-address
+            "\t@" << returnLabel << endl <<
+            "\tD=A\n"
+            "\t@SP\n"
+            "\tA=M\n"
+            "\tM=D\n"
+            "\t@SP\n"
+            "\tM=M+1\n"
+            
+            // push LCL
+            "\t@LCL\n"
+            "\tD=M \n"
+            "\t@SP\n"
+            "\tA=M\n"
+            "\tM=D\n"
+            "\t@SP\n"
+            "\tM=M+1\n"
+            
+            // push ARG
+            "\t@ARG\n"
+            "\tD=M \n"
+            "\t@SP\n"
+            "\tA=M\n"
+            "\tM=D\n"
+            "\t@SP\n"
+            "\tM=M+1\n"
+            
+            // push THIS
+            "\t@THIS\n"
+            "\tD=M \n"
+            "\t@SP\n"
+            "\tA=M\n"
+            "\tM=D\n"
+            "\t@SP\n"
+            "\tM=M+1\n"
+            
+            // push THAT
+            "\t@THAT\n"
+            "\tD=M \n"
+            "\t@SP\n"
+            "\tA=M\n"
+            "\tM=D\n"
+            "\t@SP\n"
+            "\tM=M+1\n"
+            
+            // ARG = SP-n-5
+            "\t@" << numArgs << endl <<
+            "\tD=A\n"
+            "\t@5\n"
+            "\tD=A+D\n"
+            "\t@SP\n"
+            "\tD=M-D\n"
+            "\t@ARG\n"
+            "\tM=D\n"
+            
+            // LCL = SP
+            "\t@SP\n"
+            "\tD=M\n"
+            "\t@LCL\n"
+            "\tM=D\n"
+            
+            // goto f
+            "\t@" << functionName << endl <<
+            "\t0;JMP\n"
+            
+            // (return-address)
+            "(" << returnLabel << ")\n";
 }
 
 void CodeWriter::writeArithmetic(string command)
@@ -594,6 +673,10 @@ void CodeWriter::writeAnnotation(CommandType type, std::string argument1, std::s
     {
         out << "\t// if-goto " << argument1 << endl;
     }
+    else if(type == CommandType::Call)
+    {
+        out << "\t// call " << argument1 << " " << argument2 << endl;
+    }
     else
         out << "\t// unrecognized VM command" << endl;
 }
@@ -603,4 +686,10 @@ void CodeWriter::writeAnnotation(CommandType type, std::string argument1, std::s
 void CodeWriter::setFunctionName(std::string name)
 {
     function_name = name;
+}
+
+
+std::string CodeWriter::getFunctionName()
+{
+    return function_name;
 }

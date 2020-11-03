@@ -1,0 +1,3 @@
+	// goto my_label
+	@_$my_label
+	0;JMP

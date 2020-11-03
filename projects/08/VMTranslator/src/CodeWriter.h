@@ -44,18 +44,26 @@ public:
     void writeLabel(std::string label);
     void writeGoto(std::string label);
     void writeIf(std::string label);
+    void writeCall(std::string functionName, int numArgs);
 	void writeArithmetic(std::string command);
 	void writePushPop(CommandType type, std::string segment, int index);
     void writeAnnotation(CommandType type, std::string argument1, std::string argument2);
     
 protected:
     void setFunctionName(std::string name);
+    std::string getFunctionName();
 
 private:
 	std::ostream &out;
 	std::string prefix;
     std::string function_name;
 	unsigned int branchCount;
+    unsigned int returnCount;
+    
+    inline std::string nextReturnLabel()
+    {
+        return "ret_" + std::to_string(returnCount++);
+    }
 
 	inline std::string branchLabel()
 	{

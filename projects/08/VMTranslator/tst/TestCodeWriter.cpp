@@ -31,6 +31,7 @@
 #include <iterator>
 #include <string>
 #include <algorithm>
+#include <stdexcept>
 
 // https://stackoverflow.com/questions/6163611/compare-two-files
 bool compareFiles(const std::string& p1, const std::string& p2) {
@@ -66,6 +67,11 @@ public:
    void setFunctionName(string name)
    {
        CodeWriter::setFunctionName(name);
+   }
+   
+   string getFunctionName()
+   {
+       return CodeWriter::getFunctionName();
    }
 };
 
@@ -113,4 +119,26 @@ TEST(CodeWriterTest, TestValidOutput_writeIf)
     cw.writeIf("my_label");
     out.close();
     ASSERT_TRUE(compareFiles("CodeWriter/writeIf_out", "CodeWriter/writeIf_expected"));
+}
+
+// valid args
+TEST(CodeWriterTest, TestValidArgs_writeCall)
+{
+    ofstream out("CodeWriter/writeCall_out1");
+    CodeWriterWrapper cw(out);
+    cw.writeAnnotation(CommandType::Call, "my_foo", "0");
+    cw.writeCall("my_foo", 0);
+    out.close();
+    ASSERT_TRUE(compareFiles("CodeWriter/writeCall_out1", "CodeWriter/writeCall_expected1"));
+}
+
+// negative args
+TEST(CodeWriterTest, TestNegativeArgs_writeCall)
+{
+    ofstream out("CodeWriter/writeCall_out2");
+    CodeWriterWrapper cw(out);
+    cw.writeAnnotation(CommandType::Call, "my_foo", "-1");
+    ASSERT_THROW(cw.writeCall("my_foo", -1), runtime_error);
+    out.close();
+    ASSERT_TRUE(compareFiles("CodeWriter/writeCall_out2", "CodeWriter/writeCall_expected2"));
 }

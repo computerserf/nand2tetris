@@ -1,0 +1,8 @@
+	// if-goto my_label
+	@SP
+	A=M-1
+	D=M
+	@SP
+	M=M-1
+	@_$my_label
+	D;JNE

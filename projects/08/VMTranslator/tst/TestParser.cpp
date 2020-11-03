@@ -32,7 +32,7 @@
 
 using namespace std;
 
-// has a non comment/whitespace character
+// has a non comment/whitespace character1
 TEST(ParserTest, TestHasNonWSOrComments_hasMorCommands)
 {
     istringstream input("\t\t//\n//\n/");
