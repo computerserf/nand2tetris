@@ -142,3 +142,25 @@ TEST(CodeWriterTest, TestNegativeArgs_writeCall)
     out.close();
     ASSERT_TRUE(compareFiles("CodeWriter/writeCall_out2", "CodeWriter/writeCall_expected2"));
 }
+
+// valid args
+TEST(CodeWriterTest, TestValidArgs_writeFunction)
+{
+    ofstream out("CodeWriter/writeFunction_out1");
+    CodeWriterWrapper cw(out);
+    cw.writeAnnotation(CommandType::Function, "my_foo", "2");
+    cw.writeFunction("my_foo", 2);
+    out.close();
+    ASSERT_TRUE(compareFiles("CodeWriter/writeFunction_out1", "CodeWriter/writeFunction_expected1"));
+}
+
+// negative args
+TEST(CodeWriterTest, TestNegativeArgs_writeFunction)
+{
+    ofstream out("CodeWriter/writeFunction_out2");
+    CodeWriterWrapper cw(out);
+    cw.writeAnnotation(CommandType::Function, "my_foo", "-1");
+    ASSERT_THROW(cw.writeFunction("my_foo", -1), runtime_error);
+    out.close();
+    ASSERT_TRUE(compareFiles("CodeWriter/writeFunction_out2", "CodeWriter/writeFunction_expected2"));
+}

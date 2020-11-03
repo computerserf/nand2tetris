@@ -187,6 +187,22 @@ void CodeWriter::writeCall(string functionName, int numArgs)
             "(" << returnLabel << ")\n";
 }
 
+void CodeWriter::writeFunction(std::string functionName, int numArgs)
+{
+    assert(functionName.length() > 0);
+    
+    if(numArgs < 0)
+        throw runtime_error("Call command: Number of arguments must be positive");
+    
+    //(f)
+    out << "(" << functionName << ")" << endl;
+    
+    // repeat k times:
+    // push 0
+    for(int k = 0; k < numArgs; k++)
+        writePushPop(CommandType::Push, "constant", 0);
+}
+
 void CodeWriter::writeArithmetic(string command)
 {
 	if(command == "add")
@@ -676,6 +692,10 @@ void CodeWriter::writeAnnotation(CommandType type, std::string argument1, std::s
     else if(type == CommandType::Call)
     {
         out << "\t// call " << argument1 << " " << argument2 << endl;
+    }
+    else if(type == CommandType::Function)
+    {
+        out << "\t// function " << argument1 << " " << argument2 << endl;
     }
     else
         out << "\t// unrecognized VM command" << endl;

@@ -45,6 +45,7 @@ public:
     void writeGoto(std::string label);
     void writeIf(std::string label);
     void writeCall(std::string functionName, int numArgs);
+    void writeFunction(std::string functionName, int numArgs);
 	void writeArithmetic(std::string command);
 	void writePushPop(CommandType type, std::string segment, int index);
     void writeAnnotation(CommandType type, std::string argument1, std::string argument2);
