@@ -203,6 +203,83 @@ void CodeWriter::writeFunction(std::string functionName, int numArgs)
         writePushPop(CommandType::Push, "constant", 0);
 }
 
+void CodeWriter::writeReturn()
+{
+    out <<
+            // FRAME = LCL
+            "\t@LCL\n"
+            "\tD=M\n"
+            "\t@R13\n"
+            "\tM=D\n"
+            
+            // RET = *(FRAME-5)
+            "\t@R13\n"
+            "\tD=M\n"
+            "\t@5\n"
+            "\tA=D-A\n"
+            "\tD=M\n"
+            "\t@R14\n"
+            "\tM=D\n"
+            
+            // *ARG = pop()
+            "\t@SP\n"
+            "\tA=M-1\n"
+            "\tD=M\n"
+            "\t@SP\n"
+            "\tM=M-1\n"
+            "\t@ARG\n"
+            "\tA=M\n"
+            "\tM=D\n"
+            
+            // SP = ARG+1
+            "\t@ARG\n"
+            "\tD=M\n"
+            "\tD=D+1\n"
+            "\t@SP\n"
+            "\tM=D\n"
+            
+            // THAT = *(FRAME-1)
+            "\t@R13\n"
+            "\tD=M\n"
+            "\t@1\n"
+            "\tA=D-A\n"
+            "\tD=M\n"
+            "\t@THAT\n"
+            "\tM=D\n"
+            
+            // THIS = *(FRAME-2)
+            "\t@R13\n"
+            "\tD=M\n"
+            "\t@2\n"
+            "\tA=D-A\n"
+            "\tD=M\n"
+            "\t@THIS\n"
+            "\tM=D\n"
+            
+            // ARG = *(FRAME-3)
+            "\t@R13\n"
+            "\tD=M\n"
+            "\t@3\n"
+            "\tA=D-A\n"
+            "\tD=M\n"
+            "\t@ARG\n"
+            "\tM=D\n"
+            
+            // LCL = *(FRAME-4)
+            "\t@R13\n"
+            "\tD=M\n"
+            "\t@4\n"
+            "\tA=D-A\n"
+            "\tD=M\n"
+            "\t@LCL\n"
+            "\tM=D\n"
+            
+            // goto RET
+            "\t@R14\n"
+            "\tA=M\n"
+            "\t0;JMP\n";
+}
+
 void CodeWriter::writeArithmetic(string command)
 {
 	if(command == "add")
@@ -696,6 +773,10 @@ void CodeWriter::writeAnnotation(CommandType type, std::string argument1, std::s
     else if(type == CommandType::Function)
     {
         out << "\t// function " << argument1 << " " << argument2 << endl;
+    }
+    else if(type == CommandType::Return)
+    {
+        out << "\t// return" << endl;
     }
     else
         out << "\t// unrecognized VM command" << endl;

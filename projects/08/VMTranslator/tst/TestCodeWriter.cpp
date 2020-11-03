@@ -164,3 +164,14 @@ TEST(CodeWriterTest, TestNegativeArgs_writeFunction)
     out.close();
     ASSERT_TRUE(compareFiles("CodeWriter/writeFunction_out2", "CodeWriter/writeFunction_expected2"));
 }
+
+// valid output
+TEST(CodeWriterTest, TestValidOutput_writeReturn)
+{
+    ofstream out("CodeWriter/writeReturn_out");
+    CodeWriterWrapper cw(out);
+    cw.writeAnnotation(CommandType::Return, "", "");
+    cw.writeReturn();
+    out.close();
+    ASSERT_TRUE(compareFiles("CodeWriter/writeReturn_out", "CodeWriter/writeReturn_expected"));
+}
