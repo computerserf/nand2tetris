@@ -142,7 +142,7 @@ bool isFlow(const string &s)
 
 bool isFunctionCall(const string &s)
 {
-	return (s == "function" || s == "call" || s == "RETURN");
+	return (s == "function" || s == "call" || s == "return");
 }
 
 bool validLabel(const string &s)
@@ -158,7 +158,7 @@ bool validLabel(const string &s)
 
 void Parser::parseCommmand(const string &command)
 {
-    static const std::string command_expresssion = R"(^(\D[\w\:_\.]+)(\s*(?:\D[\w\:_\.]+|\d+))(\s*(?:\D[\w\:_\.]+|\d+))?$)";
+    static const std::string command_expresssion = R"(^(\D[\w\:_\.\-]+)(\s*(?:\D[\w\:_\.]+|\d+))?(\s*(?:\D[\w\:_\.]+|\d+))?$)";
     static const regex e{command_expresssion};
     
     smatch matches;

@@ -71,6 +71,44 @@ void Translator::translate(string inputFilename, CodeWriter &writer)
             // write the correct command
             switch(type)
             {
+                case CommandType::Label:
+                {
+                    writer.writeLabel(parser.getArg1());
+                    break;
+                }
+                
+                case CommandType::Goto:
+                {
+                    writer.writeGoto(parser.getArg1());
+                    break;
+                }
+                
+                case CommandType::If:
+                {
+                    writer.writeIf(parser.getArg1());
+                    break;
+                }
+                
+                case CommandType::Call:
+                {
+                    int args = stoi(parser.getArg2());
+                    writer.writeCall(parser.getArg1(), args);
+                    break;
+                }
+                
+                case CommandType::Function:
+                {
+                    int args = stoi(parser.getArg2());
+                    writer.writeFunction(parser.getArg1(), args);
+                    break;
+                }
+                
+                case CommandType::Return:
+                {
+                    writer.writeReturn();
+                    break;
+                }
+                
                 case CommandType::Arithmetic:
                 {
                     writer.writeArithmetic(parser.getArg1());
@@ -93,10 +131,15 @@ void Translator::translate(string inputFilename, CodeWriter &writer)
                     {
                         throw runtime_error("'" + parser.getArg2() + "' does not fit in an integer");
                     }
+                    
+                    break;
                 }
                 
                 default:
+                {
+                    throw runtime_error("Unrecognized command");
                     break;
+                }
             }
         }
     }
@@ -116,6 +159,8 @@ void Translator::run()
         CodeWriter cw(out);
         
         bool empty = true;
+        
+        cw.writeInit();
         
         for(auto&& f : directory_iterator(path(inputFilename)))
         {
@@ -141,6 +186,8 @@ void Translator::run()
         {
             std::ofstream out(path(inputFilename).filename().stem().string() + + "." + OUTPUT_PREFIX);
             CodeWriter cw(out);
+            
+            cw.writeInit();
             
             translate(inputFilename, cw);
         }

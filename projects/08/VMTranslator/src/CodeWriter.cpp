@@ -41,6 +41,7 @@ const int BOOTSTRAP_SP{256};
 
 CodeWriter::CodeWriter(ostream& outputStream) : out{outputStream}
 {
+    setFunctionName("_");
 }
 
 void CodeWriter::setFilename(string filename)
@@ -70,9 +71,8 @@ void CodeWriter::writeInit()
             "\t@SP\n"
             "\tM=D\n";
     out << "\t// call Sys.init" << endl;
-    out <<
-        "\t@Sys.init\n"
-        "\t0;JMP\n";
+    writeCall("Sys.init", 0);
+
 }
 
 void CodeWriter::writeLabel(string label)
