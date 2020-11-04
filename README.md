@@ -32,6 +32,10 @@ This first software project consisted of writing an assembler for the Hack compu
 
 This project was to build a virtual machine translator to convert several files containing virtual machine commands to a single Hack assembly file. This implementation was done in C++,  using the CMake build system and the Boost filesystem library.
 
+### Project 8: Virtual Machine II: Program Control ###
+
+In this project the virtual machine translator was completed. This project called for control flow and function calling commands. The dpendencies are the same. In addition the Google Test library was used. Tests were written for only new features.
+
 ### Other projects ###
 
 **To be continued**
