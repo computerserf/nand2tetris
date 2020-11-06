@@ -34,7 +34,7 @@ This project was to build a virtual machine translator to convert several files 
 
 ### Project 8: Virtual Machine II: Program Control ###
 
-In this project the virtual machine translator was completed. This project called for control flow and function calling commands. The dpendencies are the same. In addition the Google Test library was used. Tests were written for only new features.
+In this project the virtual machine translator was completed. This project called for control flow and function calling commands. The dependencies are the same. In addition the Google Test library was used. Tests were written for only new features.
 
 ### Other projects ###
 
