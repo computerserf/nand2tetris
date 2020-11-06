@@ -1,0 +1,22 @@
+/** Snek program. */
+class Main {
+   function void main() {
+       var boolean process;
+       let process = true
+
+      // Init game
+      do Game.init()
+
+      // Keep running the game
+      while(process)
+      {
+          let process = Game.process()
+          do Sys.wait(33)
+      }
+
+      // Shutdown game
+      do Game.shutdown();
+
+      return;
+   }
+}
