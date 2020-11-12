@@ -1,0 +1,27 @@
+/** Entry point */
+class Main
+{
+    function void main()
+    {
+    /* Execute initialization, the main loop, and the shutdown code of the game.
+    The loop executes every 33 ms because of the limitations of the Jack API */
+
+    var booolean keep_running;
+    let keep_running = true;
+
+        // Initialize the game
+        do Game.initialize();
+
+        // While the game should run
+        while(keep_running)
+        {}
+            // Execute a frame
+            let keep_running = Game.frame();
+
+            // Wait 33 ms
+            do Sys.wait(33);
+        }
+
+        // Shutdown the game
+        do Game.shutdown();
+}
